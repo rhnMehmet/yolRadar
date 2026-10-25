@@ -3,17 +3,24 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@roadsense/shared": "0.1.0",
     "expo": "57.0.30",
     "expo-status-bar": "57.0.1",
+    "leaflet": "1.9.4",
     "react": "19.2.3",
     "react-native": "0.86.3",
-    "@roadsense/shared": "0.1.0"
+    "react-native-webview": "13.16.1"
   },
   "devDependencies": {
     "@types/react": "19.2.18",
     "typescript": "6.0.3"
   },
   "scripts": {
+    "map:assets": "node scripts/prepare-map-assets.mjs",
+    "map:assets:check": "node scripts/prepare-map-assets.mjs --check",
+    "test:map": "node --test tests/*.test.ts",
+    "prestart": "npm run map:assets:check",
+    "pretypecheck": "npm run map:assets:check",
     "start": "expo start",
     "typecheck": "tsc --noEmit",
     "android": "expo start --android",

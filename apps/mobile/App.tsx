@@ -1,7 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { APP_NAME } from '@roadsense/shared';
+import { useState } from 'react';
+import { MapScreen } from './src/features/damage-map/MapScreen';
 import {
   Platform,
+  Pressable,
   ScrollView,
   StatusBar as NativeStatusBar,
   StyleSheet,
@@ -14,6 +17,9 @@ const platformLabels = ['Android desteği', 'iOS desteği', 'Expo + React Native
 
 export default function App() {
   const { width } = useWindowDimensions();
+  const [mapOpen, setMapOpen] = useState(false);
+
+  if (mapOpen) return <MapScreen onBack={() => setMapOpen(false)} />;
 
   return (
     <View style={styles.screen}>
@@ -58,6 +64,9 @@ export default function App() {
             ))}
           </View>
 
+          <Pressable accessibilityRole="button" accessibilityHint="Isparta merkezli demo haritasını açar" onPress={() => setMapOpen(true)} style={styles.mapButton}>
+            <Text style={styles.mapButtonText}>Haritayı Aç</Text>
+          </Pressable>
           <Text style={styles.footer}>TypeScript ile geliştiriliyor. • 02</Text>
         </View>
       </ScrollView>
@@ -179,4 +188,13 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     marginTop: 28,
   },
+  mapButton: {
+    marginTop: 24,
+    minHeight: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 14,
+    backgroundColor: '#0B6B59',
+  },
+  mapButtonText: { color: '#FFFFFF', fontSize: 17, fontWeight: '700' },
 });
