@@ -1,9 +1,10 @@
 import { ISPARTA_CENTER, INITIAL_MAP_ZOOM, demoMapMarkers } from './demoMapMarkers.ts';
-import { escapeDocumentJson, MAP_PROTOCOL_VERSION } from './mapBridge.ts';
+import { escapeDocumentJson, isMapSession, MAP_PROTOCOL_VERSION } from './mapBridge.ts';
 import { LEAFLET_JS, LEAFLET_CSS, MAP_RUNTIME_JS, LEAFLET_SCRIPT_HASH, MAP_RUNTIME_HASH } from './generated/leafletAssets.ts';
 
-export function createMapDocument(): string {
-  const config = escapeDocumentJson({ v: MAP_PROTOCOL_VERSION, center: ISPARTA_CENTER, zoom: INITIAL_MAP_ZOOM, markers: demoMapMarkers });
+export function createMapDocument(session = 'roadsense-preview'): string {
+  if (!isMapSession(session)) throw new Error('Invalid map session');
+  const config = escapeDocumentJson({ v: MAP_PROTOCOL_VERSION, session, center: ISPARTA_CENTER, zoom: INITIAL_MAP_ZOOM, markers: demoMapMarkers });
   const policy = `default-src 'none'; script-src 'sha256-${LEAFLET_SCRIPT_HASH}' 'sha256-${MAP_RUNTIME_HASH}'; style-src 'unsafe-inline'; img-src data: https://tile.openstreetmap.org; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'`;
   return `<!doctype html><html lang="tr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">

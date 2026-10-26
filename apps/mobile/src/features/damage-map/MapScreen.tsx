@@ -8,10 +8,11 @@ import { WebView } from 'react-native-webview';
 import type { WebViewMessageEvent } from 'react-native-webview';
 import type { Coordinates } from '@roadsense/shared';
 import { createMapDocument } from './mapDocument.ts';
-import { ATTRIBUTION_URLS, getAttributionUrl, isDocumentNavigationAllowed, parseMapMessage } from './mapBridge.ts';
-import type { TileState } from './mapBridge.ts';
+import { ATTRIBUTION_URLS, getAttributionUrl, isDocumentNavigationAllowed, parseMapMessage, serializeMapCommand } from './mapBridge.ts';
+import type { MapCommand, TileState } from './mapBridge.ts';
 import { DEMO_MAP_NOTICE } from './demoMapMarkers.ts';
 import { THIRD_PARTY_NOTICES } from './generated/leafletAssets.ts';
+import { useForegroundLocation } from '../location/useForegroundLocation.ts';
 
 const tileError = 'Harita döşemeleri yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.';
 const stateLabels: Record<TileState, string> = {
@@ -28,10 +29,33 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
   const [selected, setSelected] = useState<Coordinates | null>(null);
   const [licencesOpen, setLicencesOpen] = useState(false);
   const [linkError, setLinkError] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
+  const webview = useRef<WebView>(null);
+  const sessionSeed = useRef(`roadsense-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`);
+  const session = `${sessionSeed.current}-${attempt}`;
+  const sequence = useRef(0);
+  const sentCenter = useRef(0);
+  const location = useForegroundLocation(mapReady && !licencesOpen && !error);
   const generation = useRef(0);
   const active = useRef(true);
   const initializationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const source = useMemo(() => ({ html: createMapDocument() }), []);
+  const source = useMemo(() => ({ html: createMapDocument(session) }), [session]);
+
+  useEffect(() => {
+    if (!mapReady) return;
+    const envelope = { v: 2 as const, session, seq: ++sequence.current };
+    const fix = location.freshFix;
+    const command: MapCommand = fix ? {
+      ...envelope, type: 'location-update', latitude: fix.latitude, longitude: fix.longitude,
+      accuracyMetres: fix.accuracyMetres, timestampMs: fix.timestampMs,
+      center: location.state.centerRequest > sentCenter.current,
+    } : { ...envelope, type: 'location-clear' };
+    const payload = serializeMapCommand(command);
+    if (payload) {
+      webview.current?.postMessage(payload);
+      if (fix) sentCenter.current = location.state.centerRequest;
+    }
+  }, [mapReady, session, location.freshFix, location.state.centerRequest]);
 
   function clearInitializationTimer() {
     if (initializationTimer.current !== null) clearTimeout(initializationTimer.current);
@@ -42,6 +66,7 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
     active.current = true;
     initializationTimer.current = setTimeout(() => {
       if (!active.current) return;
+      setMapReady(false);
       setTileState('error');
       setError('Harita başlatılamadı. Yeniden deneyin veya önceki ekrana dönün.');
     }, 15000);
@@ -49,11 +74,15 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
   }, [attempt]);
 
   useEffect(() => {
-    const subscription = BackHandler.addEventListener('hardwareBackPress', () => { onBack(); return true; });
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => { location.stop(); onBack(); return true; });
     return () => subscription.remove();
   }, [onBack]);
 
   function retry() {
+    location.stop();
+    setMapReady(false);
+    sequence.current = 0;
+    sentCenter.current = location.state.centerRequest;
     generation.current += 1;
     setSelected(null);
     setError(null);
@@ -64,19 +93,22 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
   function fail(message: string) {
     if (!active.current || generation.current !== attempt) return;
     clearInitializationTimer();
+    location.stop();
+    setMapReady(false);
     setTileState('error');
     setError(message);
   }
 
   function handleMessage(event: WebViewMessageEvent) {
     if (!active.current || generation.current !== attempt) return;
-    const message = parseMapMessage(event.nativeEvent.data);
+    const message = parseMapMessage(event.nativeEvent.data, session);
     if (!message) return;
     switch (message.type) {
-      case 'map-ready': clearInitializationTimer(); break;
+      case 'map-ready': clearInitializationTimer(); setMapReady(true); break;
       case 'tiles-state':
         setTileState(message.state);
         setError(message.state === 'error' ? tileError : null);
+        if (message.state === 'error') { location.stop(); setMapReady(false); }
         break;
       case 'point-selected':
         setSelected({ latitude: message.latitude, longitude: message.longitude });
@@ -97,7 +129,7 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
       <StatusBar style="dark" />
       <View style={styles.content}>
         <View style={styles.header}>
-          <Pressable accessibilityRole="button" accessibilityLabel="Başlangıç ekranına dön" onPress={onBack} style={styles.backButton}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Başlangıç ekranına dön" onPress={() => { location.stop(); onBack(); }} style={styles.backButton}>
             <Text style={styles.backText}>‹ Geri</Text>
           </Pressable>
           <View style={styles.heading}>
@@ -111,6 +143,7 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
         </Text>
         <View style={styles.mapFrame}>
           <WebView
+            ref={webview}
             key={attempt}
             source={source}
             originWhitelist={['*']}
@@ -151,6 +184,30 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
             </View>
           )}
         </View>
+        <View style={styles.locationCard}>
+          <View style={styles.locationButtons}>
+            <Pressable accessibilityRole="button" disabled={!mapReady || (location.busy && location.state.mode !== 'tracking')}
+              onPress={location.locate} style={({ pressed }) => [styles.locationButton, (!mapReady || (location.busy && location.state.mode !== 'tracking')) && styles.disabled, pressed && styles.pressed]}>
+              <Text style={styles.locationButtonText}>Konumuma Git</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" disabled={!mapReady && !location.busy}
+              onPress={location.busy ? location.stop : location.startTracking}
+              style={({ pressed }) => [styles.locationButton, location.busy && styles.stopButton, !mapReady && !location.busy && styles.disabled, pressed && styles.pressed]}>
+              <Text style={styles.locationButtonText}>{location.busy ? 'Takibi Durdur' : 'Konum Takibini Başlat'}</Text>
+            </Pressable>
+          </View>
+          <Text accessibilityLiveRegion="polite" style={styles.locationStatus}>{location.state.message}</Text>
+          {location.state.fix && <Text style={styles.locationStatus}>
+            Mavi işaretçi · {location.freshFix ? 'Son ölçüm' : 'Eski ölçüm; işaretçi gizlendi'}: {new Date(location.state.fix.timestampMs).toLocaleTimeString('tr-TR')}
+            {' · '}{location.state.fix.accuracyMetres === null ? 'Doğruluk bilinmiyor' : `±${Math.round(location.state.fix.accuracyMetres)} m`}
+            {location.state.fix.approximate ? ' · Yaklaşık konum' : ''}
+          </Text>}
+          {location.state.phase === 'denied' && !location.state.canAskAgain && <Pressable accessibilityRole="button"
+            onPress={() => { void Linking.openSettings().catch(() => { if (active.current) setLinkError(true); }); }} style={styles.footerButton}>
+            <Text style={styles.footerText}>Konum izni için Ayarlar'ı aç</Text>
+          </Pressable>}
+          <Text style={styles.privacyText}>Konum kaydedilmez veya RoadSense sunucusuna gönderilmez. Konumunuza giderken görünen yaklaşık bölge ve bağlantı bilgileriniz OSM döşeme sağlayıcısına görünür olabilir.</Text>
+        </View>
         <View style={styles.selection}>
           <Text style={styles.selectionTitle}>Seçilen nokta</Text>
           <Text selectable style={styles.coordinateText}>{selected
@@ -160,9 +217,9 @@ export function MapScreen({ onBack }: { onBack: () => void }) {
         </View>
         <View style={styles.footer}>
           <Pressable accessibilityRole="link" onPress={() => openAttribution(ATTRIBUTION_URLS[0])} style={styles.footerButton}><Text style={styles.footerText}>© OpenStreetMap contributors</Text></Pressable>
-          <Pressable accessibilityRole="button" onPress={() => setLicencesOpen(true)} style={styles.footerButton}><Text style={styles.footerText}>Lisanslar</Text></Pressable>
+          <Pressable accessibilityRole="button" onPress={() => { location.stop(); setLicencesOpen(true); }} style={styles.footerButton}><Text style={styles.footerText}>Lisanslar</Text></Pressable>
         </View>
-        {linkError && <Text style={styles.errorText}>Bağlantı tarayıcıda açılamadı.</Text>}
+        {linkError && <Text style={styles.errorText}>Bağlantı veya Ayarlar açılamadı.</Text>}
       </View>
       <Modal visible={licencesOpen} animationType="slide" onRequestClose={() => setLicencesOpen(false)}>
         <SafeAreaView style={styles.screen}>
@@ -198,6 +255,15 @@ const styles = StyleSheet.create({
   selectionTitle: { fontSize: 13, fontWeight: '700', color: '#152E3A' },
   coordinateText: { fontSize: 12, lineHeight: 18, color: '#183F32', fontVariant: ['tabular-nums'] },
   selectionHint: { fontSize: 10, lineHeight: 15, color: '#526572' },
+  locationCard: { backgroundColor: '#FFFFFF', borderRadius: 10, padding: 8, gap: 5 },
+  locationButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  locationButton: { flexGrow: 1, flexBasis: 140, minHeight: 44, justifyContent: 'center', alignItems: 'center', padding: 8, borderRadius: 8, backgroundColor: '#1758AD' },
+  locationButtonText: { color: '#FFFFFF', fontSize: 12, fontWeight: '700', textAlign: 'center' },
+  stopButton: { backgroundColor: '#963B22' },
+  disabled: { opacity: 0.45 },
+  pressed: { opacity: 0.75 },
+  locationStatus: { fontSize: 11, lineHeight: 16, color: '#183F32' },
+  privacyText: { fontSize: 10, lineHeight: 14, color: '#526572' },
   footer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   footerButton: { minHeight: 36, paddingHorizontal: 4, justifyContent: 'center' },
   footerText: { fontSize: 11, color: '#405665', textDecorationLine: 'underline' },

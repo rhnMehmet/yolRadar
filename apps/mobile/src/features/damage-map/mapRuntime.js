@@ -8,9 +8,15 @@
   var successes = 0;
   var failures = 0;
   var selected;
+  var config;
+  var userMarker;
+  var accuracyCircle;
+  var lastSequence = 0;
 
   function send(message) {
     if (!stopped && window.ReactNativeWebView) {
+      message.v = 2;
+      message.session = config && config.session;
       window.ReactNativeWebView.postMessage(JSON.stringify(message));
     }
   }
@@ -37,13 +43,57 @@
     if (stopped) return;
     stopped = true;
     clearTimeout(timeout);
+    window.removeEventListener('message', receiveLocation);
+    document.removeEventListener('message', receiveLocation);
     if (map) map.remove();
   }
 
+  function exactKeys(value, keys) {
+    return Object.keys(value).length === keys.length
+      && keys.every(function (key) { return Object.prototype.hasOwnProperty.call(value, key); });
+  }
+
+  function receiveLocation(event) {
+    if (stopped || !map || typeof event.data !== 'string' || event.data.length > 2048) return;
+    var value;
+    try { value = JSON.parse(event.data); } catch (_) { return; }
+    if (!value || typeof value !== 'object' || Array.isArray(value) || value.v !== 2
+      || value.session !== config.session || !Number.isSafeInteger(value.seq) || value.seq <= lastSequence) return;
+    if (value.type === 'location-clear' && exactKeys(value, ['v', 'session', 'type', 'seq'])) {
+      lastSequence = value.seq;
+      if (userMarker) { map.removeLayer(userMarker); userMarker = null; }
+      if (accuracyCircle) { map.removeLayer(accuracyCircle); accuracyCircle = null; }
+      return;
+    }
+    if (value.type !== 'location-update'
+      || !exactKeys(value, ['v', 'session', 'type', 'seq', 'latitude', 'longitude', 'accuracyMetres', 'timestampMs', 'center'])
+      || typeof value.latitude !== 'number' || !Number.isFinite(value.latitude) || value.latitude < -90 || value.latitude > 90
+      || typeof value.longitude !== 'number' || !Number.isFinite(value.longitude) || value.longitude < -180 || value.longitude > 180
+      || !Number.isSafeInteger(value.timestampMs) || value.timestampMs <= 0
+      || value.timestampMs > Date.now() + 5000 || Date.now() - value.timestampMs > 30000
+      || typeof value.center !== 'boolean'
+      || (value.accuracyMetres !== null && (typeof value.accuracyMetres !== 'number'
+        || !Number.isFinite(value.accuracyMetres) || value.accuracyMetres < 0 || value.accuracyMetres > 100000))) return;
+    lastSequence = value.seq;
+    var point = [value.latitude, value.longitude];
+    if (userMarker) userMarker.setLatLng(point);
+    else userMarker = L.circleMarker(point, {
+      radius: 9, color: '#FFFFFF', weight: 3, fillColor: '#2563EB', fillOpacity: 1, interactive: false,
+    }).addTo(map);
+    if (value.accuracyMetres !== null) {
+      if (accuracyCircle) accuracyCircle.setLatLng(point).setRadius(value.accuracyMetres);
+      else accuracyCircle = L.circle(point, {
+        radius: value.accuracyMetres, color: '#2563EB', weight: 1, fillColor: '#2563EB', fillOpacity: 0.1, interactive: false,
+      }).addTo(map);
+    } else if (accuracyCircle) { map.removeLayer(accuracyCircle); accuracyCircle = null; }
+    if (value.center) map.setView(point, value.accuracyMetres !== null && value.accuracyMetres > 500 ? 13 : Math.min(Math.max(map.getZoom(), 15), 17));
+  }
+
   try {
-    var config = JSON.parse(document.getElementById('map-config').textContent);
+    config = JSON.parse(document.getElementById('map-config').textContent);
     var L = window.L;
-    if (!L || config.v !== 1 || config.markers.length !== 3) throw new Error('Invalid local map configuration');
+    if (!L || config.v !== 2 || typeof config.session !== 'string'
+      || !/^[a-zA-Z0-9-]{1,64}$/.test(config.session) || config.markers.length !== 3) throw new Error('Invalid local map configuration');
     map = L.map('map', {
       zoomControl: true,
       attributionControl: true,
@@ -103,6 +153,8 @@
     });
 
     window.addEventListener('pagehide', cleanup, { once: true });
+    window.addEventListener('message', receiveLocation);
+    document.addEventListener('message', receiveLocation);
     window.addEventListener('resize', function () { if (!stopped) map.invalidateSize(); });
     send({ v: 1, type: 'map-ready' });
     tiles.addTo(map);
