@@ -9,3 +9,25 @@ export type {
   TokenProvider, ApiClientOptions, ApiClientConfig,
   ApiRequestOptions, ApiResult, ApiClient,
 } from './api.ts'
+export { CONTRACT_VERSION } from './contracts.ts'
+export type {
+  SourceDomain, DetectorKind, CanonicalClass, ResultLabel, SessionScope,
+  DetectorIdentity, ClockDomain, CaptureTime, CaptureSession, ImageFrame,
+  SpatialPosition, PositionSample, BoundingBox, ClassMap, DetectionObservation,
+  DamageLocation, DamageCandidate, VerifiedDamage, AlertEvent, SimulationGroundTruth,
+  AnalysisStatus, VideoAnalysisSession, VideoTimelineEvent, CoverageRange,
+  FrameAnalysisOutcome, AnalysisCoverage, VideoAnalysisSummary,
+} from './contracts.ts'
+export {
+  isSessionScope, sameScope, isDetectorIdentity, sameDetector, resultLabel,
+  isCaptureSession, isVideoAnalysisSession, isCaptureTime, isImageFrame,
+  isSpatialPosition, isPositionSample, isClassMap, resolveCanonicalClass,
+  isDetectionObservation, isDamageCandidate, isVerifiedDamage, isAlertEvent,
+  isSimulationGroundTruth, scopeKey, acceptFrame,
+} from './contractValidation.ts'
+export type { Acceptance } from './contractValidation.ts'
+export {
+  createVideoTimelineEvent, isVideoTimelineEvent, acceptVideoTimelineEvent,
+  calculateAnalysisCoverage, summarizeVideoAnalysis,
+} from './videoAnalysis.ts'
+export type { VideoEvidence } from './videoAnalysis.ts'
