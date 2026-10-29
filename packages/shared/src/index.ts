@@ -31,3 +31,5 @@ export {
   calculateAnalysisCoverage, summarizeVideoAnalysis,
 } from './videoAnalysis.ts'
 export type { VideoEvidence } from './videoAnalysis.ts'
+export type { ReviewItem, ReviewEvidence, ReviewSession } from './review.ts'
+export { isReviewItem, isReviewSession, isReviewMapEligible } from './review.ts'

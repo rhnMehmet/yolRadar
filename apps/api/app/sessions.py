@@ -2,9 +2,10 @@
 import asyncio
 import hashlib
 import json
+import secrets
 from uuid import uuid4
 from pydantic import Field
-from .contracts import (ApiError, ContractVersion, Domain, Exact, Id, ImageFrame, PositionSample, VideoAnalysisSession,
+from .contracts import (ApiError, ContractVersion, Domain, Exact, Id, ImageFrame, PositionSample, SafeInt, VideoAnalysisSession,
     parse_session, require, scope, validate_candidate, validate_frame, validate_observation,
     validate_position, validate_time, validate_verified, wire)
 from .detectors.test_detector import CLASS_MAP, IDENTITY, PROFILES
@@ -12,7 +13,7 @@ from .jobs import Jobs, process_image
 from .media import receive_image
 from .storage import Store
 from .video import make_event, summarize
-from typing import Literal
+from typing import Annotated, Literal
 
 
 def fingerprint(value):
@@ -55,6 +56,7 @@ class Review(Exact):
     commandId: Id
     decision: Literal['approve', 'reject']
     damageLocation: dict | None = None
+    expectedReviewRevision: Annotated[SafeInt, Field(ge=0)] | None = None
 
 
 class GroupEvents(Exact):
@@ -68,6 +70,7 @@ class Engine:
         self.store = Store(settings)
         self.jobs = Jobs(self, worker)
         self.ingest_lock = asyncio.Lock()
+        self.review_cursor_key = secrets.token_bytes(32)
 
     def locate(self, principal, sid, run_id=None, review=False):
         for domain in principal.domains:
@@ -476,12 +479,26 @@ class Engine:
                 if session_row['run'] != row['run']:
                     raise ApiError(409, 'stale_run')
                 item = row['payload']
+                from .review_queries import review_command, review_receipt, write_review, review_revision
+                key, digest, previous = review_command(self.store, db, principal, row, request, 'candidate', candidate_id)
+                if previous is not None:
+                    return previous
                 command_hash = fingerprint([principal.id, wire(request)])
                 if item['reviewDecision'] != 'pending':
                     if item.get('reviewHash') != command_hash:
                         raise ApiError(409, 'review_conflict')
                     return self.public_candidate(item)
                 candidate, session = item['candidate'], session_row['payload']['session']
+                event = self.store.get(db, 'event', item['eventId']) if item.get('eventId') else None
+                if event and (event['sid'], event['run'], event['owner']) != (row['sid'], row['run'], row['owner']):
+                    raise ApiError(409, 'review_state_inconsistent')
+                if event and (event['payload']['reviewStatus'] == 'rejected'
+                    or (event['payload']['reviewStatus'] == 'approved' and request.decision == 'reject')):
+                    raise ApiError(409, 'review_conflict')
+                entity = item.get('eventId') or candidate_id
+                revision = review_revision(self.store, db, row['sid'], row['run'], entity)
+                if request.expectedReviewRevision is not None and request.expectedReviewRevision != revision:
+                    raise ApiError(409, 'stale_review_revision')
                 if request.decision == 'approve':
                     require(request.damageLocation is not None, 'damage_location_required_for_verification')
                     verified = {**scope(session), **session['detector'], 'verifiedId': uuid4().hex,
@@ -497,7 +514,10 @@ class Engine:
                     event = self.store.get(db, 'event', item['eventId'])
                     event['payload']['reviewStatus'] = item['reviewDecision']
                     self.store.put(db, 'event', event['id'], event['payload'], row['owner'], row['sid'], row['run'])
-                return self.public_candidate(item)
+                write_review(self.store, db, principal, row, entity, request, 'LOCATION' if request.decision == 'approve' else 'CONTENT', revision)
+                result = self.public_candidate(item)
+                review_receipt(self.store, db, principal, row, key, digest, result)
+                return result
         raise ApiError(404, 'candidate_not_found')
 
     def review_event(self, principal, sid, run_id, event_id, request):
@@ -505,7 +525,6 @@ class Engine:
             raise ApiError(403, 'reviewer_required')
         domain, _ = self.locate(principal, sid, run_id, review=True)
         require(domain == 'REPLAY', 'video_session_required')
-        require(request.damageLocation is None, 'video_review_does_not_create_map_damage')
         with self.store.tx(domain) as db:
             current = self.store.get(db, 'session', sid)
             if current['run'] != run_id:
@@ -513,6 +532,11 @@ class Engine:
             row = self.store.get(db, 'event', event_id)
             if not row or row['sid'] != sid or row['run'] != run_id:
                 raise ApiError(404, 'event_not_found')
+            from .review_queries import review_command, review_receipt, write_review, review_revision
+            command_key, command_digest, receipt = review_command(self.store, db, principal, row, request, 'event', event_id)
+            if receipt is not None:
+                return receipt
+            require(request.damageLocation is None, 'video_review_does_not_create_map_damage')
             key = fingerprint([principal.id, sid, run_id, 'event-review', request.commandId])
             digest = fingerprint([event_id, wire(request)])
             previous = self.store.get(db, 'command', key)
@@ -522,7 +546,15 @@ class Engine:
                 return row['payload']
             if row['payload']['reviewStatus'] != 'pending':
                 raise ApiError(409, 'review_conflict')
+            revision = review_revision(self.store, db, sid, run_id, event_id)
+            if request.expectedReviewRevision is not None and request.expectedReviewRevision != revision:
+                raise ApiError(409, 'stale_review_revision')
+            linked = [r for r in self.store.find(db, 'candidate', sid=sid, run=run_id) if r['payload'].get('eventId') == event_id]
+            if not linked or any(r['owner'] != row['owner'] or r['payload']['reviewDecision'] != 'pending' for r in linked):
+                raise ApiError(409, 'review_state_inconsistent')
             row['payload']['reviewStatus'] = 'approved' if request.decision == 'approve' else 'rejected'
             self.store.put(db, 'event', event_id, row['payload'], row['owner'], sid, run_id)
             self.store.put(db, 'command', key, {'hash': digest}, principal.id, sid, run_id)
+            write_review(self.store, db, principal, row, event_id, request, 'CONTENT', revision)
+            review_receipt(self.store, db, principal, row, command_key, command_digest, row['payload'])
             return row['payload']

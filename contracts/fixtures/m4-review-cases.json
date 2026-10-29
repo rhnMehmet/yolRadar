@@ -1,0 +1,3186 @@
+{
+  "description": "Synthetic review DTO parity. Coordinates are invented test values; no credentials or user media.",
+  "cases": [
+    {
+      "id": "pending-fractional-pts",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "content-approved-unknown-location",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "CONTENT"
+      }
+    },
+    {
+      "id": "legacy-approved-without-invented-audit",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "rejected",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "rejected",
+        "reviewRevision": 1,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "CONTENT"
+      }
+    },
+    {
+      "id": "unavailable-evidence",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": false,
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "real-verified-remains-test",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": true,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "sim-local-not-wgs84",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "SIM",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "SIM",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "SIM_LOCAL",
+              "frameId": "sim-world",
+              "units": "m",
+              "x": 0,
+              "y": -2,
+              "z": 1
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "yolo-identity-not-production",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "YOLO",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "YOLO_RESULT",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "bounded-preview",
+      "kind": "item",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-0",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-0",
+          "obs-1",
+          "obs-2",
+          "obs-3",
+          "obs-4",
+          "obs-5",
+          "obs-6",
+          "obs-7",
+          "obs-8",
+          "obs-9",
+          "obs-10",
+          "obs-11",
+          "obs-12",
+          "obs-13",
+          "obs-14",
+          "obs-15",
+          "obs-16",
+          "obs-17",
+          "obs-18",
+          "obs-19",
+          "obs-20",
+          "obs-21",
+          "obs-22",
+          "obs-23",
+          "obs-24",
+          "obs-25",
+          "obs-26",
+          "obs-27",
+          "obs-28",
+          "obs-29",
+          "obs-30",
+          "obs-31",
+          "obs-32",
+          "obs-33",
+          "obs-34",
+          "obs-35",
+          "obs-36",
+          "obs-37",
+          "obs-38",
+          "obs-39",
+          "obs-40",
+          "obs-41",
+          "obs-42",
+          "obs-43",
+          "obs-44",
+          "obs-45",
+          "obs-46",
+          "obs-47",
+          "obs-48",
+          "obs-49",
+          "obs-50",
+          "obs-51",
+          "obs-52",
+          "obs-53",
+          "obs-54",
+          "obs-55",
+          "obs-56",
+          "obs-57",
+          "obs-58",
+          "obs-59",
+          "obs-60",
+          "obs-61",
+          "obs-62",
+          "obs-63",
+          "obs-64",
+          "obs-65",
+          "obs-66",
+          "obs-67",
+          "obs-68",
+          "obs-69",
+          "obs-70",
+          "obs-71",
+          "obs-72",
+          "obs-73",
+          "obs-74",
+          "obs-75",
+          "obs-76",
+          "obs-77",
+          "obs-78",
+          "obs-79",
+          "obs-80",
+          "obs-81",
+          "obs-82",
+          "obs-83",
+          "obs-84",
+          "obs-85",
+          "obs-86",
+          "obs-87",
+          "obs-88",
+          "obs-89",
+          "obs-90",
+          "obs-91",
+          "obs-92",
+          "obs-93",
+          "obs-94",
+          "obs-95",
+          "obs-96",
+          "obs-97",
+          "obs-98",
+          "obs-99"
+        ],
+        "observationCount": 101,
+        "frameCount": 21,
+        "referencesTruncated": true,
+        "evidence": [
+          {
+            "frameId": "frame-0",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-2",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-3",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-4",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-5",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-6",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-7",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-8",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-9",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-10",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-11",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-12",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-13",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-14",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-15",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-16",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-17",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-18",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-19",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "extra-token",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "token": "NOT_A_CREDENTIAL"
+      }
+    },
+    {
+      "id": "extra-path",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "mediaPath": "NOT_A_PATH"
+      }
+    },
+    {
+      "id": "production",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "PRODUCTION",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong-origin",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "YOLO_RESULT",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "boolean-pts",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": true,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "string-pts",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": "1000",
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "negative-pts",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": -1,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid-confidence",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 1.1,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "boolean-revision",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": false,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "fractional-revision",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0.5,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "null-optional",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "replay-missing-context",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-real",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "bad-id",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "../secret",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-evidence",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": []
+      }
+    },
+    {
+      "id": "unproven-verified",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "audit-revision-without-actor",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 1,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "invented-actor",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewerId": "someone"
+      }
+    },
+    {
+      "id": "bad-class",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "vehicle",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "duplicate-observations",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1",
+          "obs-1"
+        ],
+        "observationCount": 2,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "duplicate-frames",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1",
+          "obs-2"
+        ],
+        "observationCount": 2,
+        "frameCount": 2,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          },
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong-count",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 2,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong-truncation",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": true,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "oversized-count",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 10001,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-primary-frame",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "other-frame",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "mime-svg",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/svg+xml",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "unavailable-has-mime",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": false,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "evidence-boolean-width",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": true,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ]
+      }
+    },
+    {
+      "id": "evidence-null-time",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "evidence-secret",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 0,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001,
+            "path": "NOT_A_PATH"
+          }
+        ]
+      }
+    },
+    {
+      "id": "audit-pending",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "pending",
+        "reviewRevision": 1,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "CONTENT"
+      }
+    },
+    {
+      "id": "audit-missing-time",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "CONTENT"
+      }
+    },
+    {
+      "id": "audit-invalid-date",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewedAt": "2026-02-30T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "CONTENT"
+      }
+    },
+    {
+      "id": "audit-noncanonical-time",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "eventId": "event-1",
+        "videoId": "fixture-video",
+        "recordingOrigin": "UNKNOWN",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "videoTimestampMs": 1001.001001001001,
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "UNKNOWN",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png",
+            "videoTimestampMs": 1001.001001001001
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "CONTENT"
+      }
+    },
+    {
+      "id": "verified-wrong-run",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "other-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "verified-wrong-model",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "other-model",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "verified-wrong-candidate",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "other-candidate",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "verified-unknown-class",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "unknown",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "unknown",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "verified-extra-path",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          },
+          "path": "NOT_A_PATH"
+        }
+      }
+    },
+    {
+      "id": "verified-real-sim-position",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "SIM_LOCAL",
+              "frameId": "sim",
+              "units": "m",
+              "x": 1,
+              "y": 2,
+              "z": 3
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "verified-sim-gps",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "SIM",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "SIM",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "vehicle-gps-is-not-damage-evidence",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "VEHICLE_GPS"
+          }
+        }
+      }
+    },
+    {
+      "id": "verified-rejected",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "rejected",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 37.5,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "verified-invalid-coordinate",
+      "kind": "item",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 1,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REAL",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "frameId": "frame-1",
+        "canonicalClass": "pothole",
+        "confidence": 0.8,
+        "reviewStatus": "approved",
+        "reviewRevision": 1,
+        "locationStatus": "VERIFIED",
+        "observationIds": [
+          "obs-1"
+        ],
+        "observationCount": 1,
+        "frameCount": 1,
+        "referencesTruncated": false,
+        "evidence": [
+          {
+            "frameId": "frame-1",
+            "width": 640,
+            "height": 360,
+            "available": true,
+            "mime": "image/png"
+          }
+        ],
+        "reviewedAt": "2026-10-29T09:00:00.123Z",
+        "reviewerId": "fixture-reviewer",
+        "reviewScope": "LOCATION",
+        "verifiedDamage": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "detectorKind": "TEST",
+          "modelVersion": "synthetic-model-v1",
+          "classMapVersion": "synthetic-map-v1",
+          "verifiedId": "verified-1",
+          "candidateId": "candidate-1",
+          "canonicalClass": "pothole",
+          "reviewStatus": "approved",
+          "review": {
+            "kind": "HUMAN",
+            "reviewerId": "fixture-reviewer"
+          },
+          "damageLocation": {
+            "kind": "ESTIMATED",
+            "position": {
+              "kind": "GPS",
+              "latitude": 91,
+              "longitude": 30.5,
+              "accuracyM": 5
+            },
+            "uncertaintyM": 10,
+            "method": "HUMAN_PLACEMENT"
+          }
+        }
+      }
+    },
+    {
+      "id": "session-v2",
+      "kind": "session",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        }
+      }
+    },
+    {
+      "id": "session-real-v1",
+      "kind": "session",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 1,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REAL",
+          "clockDomain": "DEVICE_MONOTONIC",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          }
+        }
+      }
+    },
+    {
+      "id": "session-extra-secret",
+      "kind": "session",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running",
+          "token": "NOT_A_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "id": "session-detector-secret",
+      "kind": "session",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "path": "NOT_A_PATH"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        }
+      }
+    },
+    {
+      "id": "session-wrong-origin",
+      "kind": "session",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "environment": "TEST",
+        "resultOrigin": "YOLO_RESULT",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        }
+      }
+    },
+    {
+      "id": "session-invalid-clock",
+      "kind": "session",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "DEVICE_MONOTONIC",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        }
+      }
+    },
+    {
+      "id": "session-wrong-environment",
+      "kind": "session",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "environment": "PRODUCTION",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        }
+      }
+    }
+  ]
+}

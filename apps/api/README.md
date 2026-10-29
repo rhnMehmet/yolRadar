@@ -213,7 +213,8 @@ Sürümleme, tolerans ve geri alma ayrıntıları:
 Konumsuz video olayı insan tarafından onaylanabilir; bu işlem VerifiedDamage
 oluşturmaz. Harita doğrulaması açık konum/yöntem/belirsizlik ister; araç GPS'i hasar
 konumuna kopyalanmaz. Orijinal aday kanıtı snapshot olarak korunur; güncel inceleme
-durumu API zarfındaki reviewDecision'dır. VerifiedDamage ayrı kayıttır. İnsan onayı
+durumu video için kanonik event.reviewStatus, konum doğrulaması için API zarfındaki
+reviewDecision'dır. Reviewer DTO'su bunları ayrı yansıtır. VerifiedDamage ayrı kayıttır. İnsan onayı
 SIM/REPLAY/TEST kayıtlarını REAL/YOLO'ya dönüştürmez. Terminal run incelemeye açık
 kalabilir; yeni run açıldığında eski run için işlem 409 olur.
 
@@ -266,3 +267,57 @@ Lisanslar: FastAPI/Pydantic/pytest MIT, Uvicorn/HTTPX BSD-3-Clause, Pillow MIT-C
 dolaylı paketlerin hash ve sürümleri lock dosyalarındadır. Wheel'lerdeki lisans
 bildirimleri kurulumda korunur; Python/SQLite ve native görüntü kütüphanelerinin
 kendi bildirimleri de geçerlidir. Model/veri seti lisans incelemesi M2 kapsamında yoktur.
+
+## M4A: özel reviewer okuma API'si
+
+Sunucu tarafından atanmış `Principal.reviewer=true` ve izinli domain gerekir.
+Mevcut REPLAY analiz kimliği yükseltilmez. Owner oturum/summary uçları başka
+kullanıcının verisini reviewer'a açmaz; aşağıdaki ayrı uçları kullanın:
+
+| GET yolu | Filtreler / sonuç |
+| --- | --- |
+| `/v1/review/sessions` | sourceDomain, detectorKind, status; güvenli oturum DTO'ları |
+| `/v1/review/sessions/{sessionId}/runs/{runId}/candidates` | status, canonicalClass; inceleme DTO'ları |
+| `/v1/review/sessions/{sessionId}/runs/{runId}/evidence/{frameId}` | Yetkili JPEG/PNG binary; no-store, nosniff |
+| `/v1/review/map-damages` | layer=production (varsayılan) veya açık layer=test; sourceDomain |
+
+Liste uçlarında `limit=25` varsayılan, üst sınır 100, `cursor` devam anahtarıdır.
+`environment=TEST` dışındaki ortamlar 403'tür. Tanımsız, yinelenen ve kimlik iddiası
+taşıyan query parametreleri 422'dir. Token sadece Authorization başlığındadır;
+URL'ye, public VITE değişkenine veya kalıcı tarayıcı depolamasına yazılmaz.
+
+Yanıt zarfı `{environment:"TEST",items:[...],nextCursor:null|"..."}` biçimindedir.
+Sıralama `(sourceDomain,id)`; imzalı cursor principal, domain, filtre, ortam,
+endpoint ve limit ile bağlıdır. Restart sonrası yeniden ilk sayfadan başlayın.
+Cursor oluşturulduktan sonra eklenen kayıtlar dışlanır; inceleme durumu/yeni run
+değişimleri için sayfalar arası tarihsel bir DB snapshot garantisi yoktur.
+
+DTO'da `videoTimestampMs` gerçek decoded PTS'dir; planlanan örnekleme zamanı
+veya HTTP saati değildir. `reviewStatus` içerik kararıdır; `locationStatus` ve
+`verifiedDamage` ayrı anlam taşır. Bakım durumları burada bulunmaz. En fazla 100
+observation ve 20 kanıt referansı önizlenir; toplam sayılar ve
+`referencesTruncated` açıkça döner. Kanıt endpointi bilinen frameId ile ayrıca
+okunabilir; tam referans sayfalaması bu aşamada eklenmemiştir.
+
+Mevcut karar POST uçları korunur. İsteğe bağlı `expectedReviewRevision` eski
+istemcileri bozmadan revision kontrolü ekler. Aynı principal/session/run içindeki
+aynı commandId, işlem, hedef ve gövde aynı cevabı döndürür; değişen gövde/hedef 409.
+Terminal içerik kararı başka endpointten değiştirilemez. Konum doğrulaması ayrı
+koşullarla ilerler; konumsuz içerik onayından VerifiedDamage doğmaz.
+
+SQLite generic records içinde `review-state`, `review-audit` ve komut makbuzu
+aynı `BEGIN IMMEDIATE` transaction'ında yazılır. Yeni tablo/migration yoktur.
+Eski kayıtlar revision 0 ile okunur; eski reviewer/zaman uydurulmaz. Yeni audit
+gerçek karar anını ve sunucudaki actor kimliğini kaydeder; DTO en son audit'i
+gösterir. İçerik ve sonraki konum kararının geçmişi DB'de ayrı tutulur.
+
+Bu backend yalnız TEST verisidir. Üretim harita katmanı daima boştur. Açık test
+katmanı yalnız onaylı, yöntem/belirsizlik taşıyan, geçerli GPS VerifiedDamage
+döndürür. REAL kaynak etiketi, insan onayı veya YOLO kimliği üretime terfi değildir.
+SIM_LOCAL WGS84'e çevrilmez; araç GPS'si hasar kanıtı sayılmaz.
+
+M4A test servisi ayrı port/kimlik/veri alanında çalıştırılır. Mevcut 8001 servisini
+değişmiş kodla mevcut veri alanında otomatik yeniden başlatmayın. Gerçek kullanıcı
+auth dosyasına reviewer eklemek ayrıca yetkilendirilmelidir. Üretim RBAC, audit
+saklama politikası, karar geri açma/düzeltme ve M4B/M4C arayüzleri tamamlanmamıştır.
+Örnekler ve politika: [M4 inceleme akışı](../../docs/architecture/m4-review-flow.md).

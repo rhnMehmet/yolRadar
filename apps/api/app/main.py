@@ -10,7 +10,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .contracts import ApiError
 from .jobs import process_image
-from .routes import analysis, candidates, sessions
+from .routes import analysis, candidates, review, sessions
 from .security import Settings
 from .sessions import Engine
 
@@ -108,4 +108,5 @@ def create_app(settings=None, *, worker=process_image):
     app.include_router(sessions.router)
     app.include_router(analysis.router)
     app.include_router(candidates.router)
+    app.include_router(review.router)
     return app
