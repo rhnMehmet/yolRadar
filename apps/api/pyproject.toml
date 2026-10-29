@@ -1,0 +1,18 @@
+[project]
+name = "roadsense-api"
+version = "0.1.0"
+requires-python = ">=3.14.10,<3.15"
+dependencies = [
+  "fastapi==0.162.0",
+  "uvicorn==0.54.0",
+  "pydantic==2.14.1",
+  "Pillow==13.0.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest==9.2.0", "httpx==0.28.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q -p no:cacheprovider"

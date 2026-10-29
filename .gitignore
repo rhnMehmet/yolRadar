@@ -34,3 +34,40 @@ dist/
 # Local OS/editor files
 .DS_Store
 Thumbs.db
+
+# Python backend environments, caches and local data
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite-journal
+*.sqlite3-journal
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+/apps/api/.local/
+/apps/api/media/
+/apps/api/uploads/
+/apps/api/tmp/
+/apps/api/dev-access.json
+/apps/api/secrets/
+
+# Model artifacts belong outside source control
+*.pt
+*.pth
+*.onnx
+*.engine
+*.safetensors

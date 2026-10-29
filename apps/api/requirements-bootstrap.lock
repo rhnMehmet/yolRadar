@@ -1,0 +1,2 @@
+# CPython 3.14.10 / Windows x64; verified PyPI SHA-256 wheels.
+pip==26.2.2 --hash=sha256:fd7f4dfa8190e014013b9f08f3e973f4e4c26ffd179a204895533a7254813a70
