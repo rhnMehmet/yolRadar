@@ -8,8 +8,9 @@ import './App.css'
 
 const DamageMap = lazy(() => import('./features/damage-map/DamageMap'))
 const VideoAnalysisPage = lazy(() => import('./features/video-analysis/VideoAnalysisPage'))
+const ReviewPage = lazy(() => import('./features/review/ReviewPage'))
 
-type Section = 'overview' | 'reports' | 'map' | 'statistics' | 'video'
+type Section = 'overview' | 'reports' | 'map' | 'statistics' | 'video' | 'review'
 type IconName = 'grid' | 'list' | 'map' | 'chart' | 'arrow' | 'pin' | 'clock' | 'check' | 'layers' | 'search'
 
 const navigation: { id: Section; label: string; icon: IconName }[] = [
@@ -18,6 +19,7 @@ const navigation: { id: Section; label: string; icon: IconName }[] = [
   { id: 'map', label: 'Hasar Haritası', icon: 'map' },
   { id: 'statistics', label: 'İstatistikler', icon: 'chart' },
   { id: 'video', label: 'Video Analizi', icon: 'layers' },
+  { id: 'review', label: 'İnceleme', icon: 'check' },
 ]
 
 function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
@@ -138,6 +140,7 @@ function App() {
           )}
 
           {section === 'video' && <Suspense fallback={<div className="panel map-fallback" role="status">Video analizi hazırlanıyor…</div>}><VideoAnalysisPage /></Suspense>}
+          {section === 'review' && <Suspense fallback={<div className="panel map-fallback" role="status">İnceleme hazırlanıyor…</div>}><ReviewPage /></Suspense>}
 
           {section === 'statistics' && <div className="statistics-grid"><section className="panel" aria-labelledby="stats-title"><div className="panel-heading"><div><span className="section-kicker">ÖRNEK VERİLER</span><h2 id="stats-title">Hasar türüne göre dağılım</h2></div><span className="record-count">{demoReports.length} kayıt</span></div><div className="damage-bars">{damageTypes.map((type) => { const count = demoReports.filter((report) => report.damageType === type).length; return <div className="damage-bar-row" key={type}><div><span>{getDamageTypeLabel(type)}</span><strong>{count}<small> bildirim</small></strong></div><div className="bar-track" role="img" aria-label={`${getDamageTypeLabel(type)}: ${count} örnek bildirim`}><span style={{ width: `${(count / demoReports.length) * 100}%` }} /></div></div> })}<p className="chart-note">Tüm hesaplamalar aynı örnek bildirim listesini kullanır.</p></div></section>{distribution}</div>}
 

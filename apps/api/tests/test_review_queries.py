@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from pydantic import ValidationError
 from app.contracts import ApiError
-from app.review_queries import ReviewItem, ReviewSession
+from app.review_queries import ReviewItem, ReviewSession, ReviewFrame, ReviewSummary
 
 PARITY_CASES = json.loads((Path(__file__).resolve().parents[3] / 'contracts/fixtures/m4-review-cases.json').read_text(encoding='utf-8'))['cases']
 
@@ -18,7 +18,7 @@ PARITY_CASES = json.loads((Path(__file__).resolve().parents[3] / 'contracts/fixt
 def test_review_contract_parity(case):
     accepted = True
     try:
-        (ReviewSession if case['kind'] == 'session' else ReviewItem).model_validate(case['value'])
+        {'session':ReviewSession,'item':ReviewItem,'frame':ReviewFrame,'summary':ReviewSummary}[case['kind']].model_validate(case['value'])
     except (ValueError, ValidationError, ApiError):
         accepted = False
     assert accepted == case['valid']

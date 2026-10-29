@@ -6,9 +6,11 @@ import { VideoStage } from './VideoStage.tsx'
 import { VideoTimeline } from './VideoTimeline.tsx'
 import { VideoSummary } from './VideoSummary.tsx'
 import './videoAnalysis.css'
+import { API_TARGETS } from '../../api/localApiTarget.ts'
 
 export default function VideoAnalysisPage() {
   const { controller, state } = useVideoAnalysis()
+  const [target,setTarget] = useState<string>('http://127.0.0.1:8001')
   const video = useRef<HTMLVideoElement>(null), mounted = useRef(false)
   const [media, setMedia] = useState<{ url: string; file: File; id: string } | null>(null)
   const [info, setInfo] = useState<VideoInfo | null>(null), [error, setError] = useState(''), [token, setToken] = useState('')
@@ -39,10 +41,10 @@ export default function VideoAnalysisPage() {
   return <div className="video-analysis">
     <div className="va-heading"><div><span className="section-kicker">YEREL VİDEO LABORATUVARI</span><h2>Video Analizi</h2></div><span className="va-test">TEST_SYNTHETIC · Gerçek YOLO yok</span></div>
     <p className="va-notice">TestDetector görüntüyü yorumlamaz; önceden belirlenmiş sentetik kutular döndürür. Orijinal video yüklenmez; yalnız seçilmiş JPEG kareler yerel API’ye gönderilir.</p>
-    <section className="va-card"><div className="va-controls"><label className="va-file">Video seç (MP4 / desteklenen MOV)<input type="file" accept=".mp4,.mov,video/mp4,video/quicktime" onChange={e => { select(e.target.files?.[0]); e.target.value = '' }} /></label>
+    <section className="va-card"><label>Analiz API çalışma alanı<select value={target} disabled={state.busy} onChange={e=>{controller.setTarget(e.target.value);setTarget(e.target.value);setToken('');setError('')}}>{API_TARGETS.map(t=><option key={t.origin} value={t.origin}>{t.label}</option>)}</select></label><div className="va-controls"><label className="va-file">Video seç (MP4 / desteklenen MOV)<input type="file" accept=".mp4,.mov,video/mp4,video/quicktime" onChange={e => { select(e.target.files?.[0]); e.target.value = '' }} /></label>
       <label>REPLAY / TEST API kimliği<input type="password" aria-label="Sınırlı REPLAY API token" value={token} disabled={state.busy} autoComplete="off" spellCheck={false} onChange={e => setToken(e.target.value)} /></label>
       <button type="button" disabled={state.busy} onClick={() => setToken('')}>Kimliği temizle</button></div>
-      <p>En fazla 512 MiB, 10 dakika, 33 megapiksel. Token yalnız bu sayfanın belleğinde tutulur; sohbetten paylaşmayın. Hedef: http://127.0.0.1:8001.</p>
+      <p>En fazla 512 MiB, 10 dakika, 33 megapiksel. Analiz token’ı yalnız bu sayfanın belleğinde tutulur; sohbetten paylaşmayın. Hedef: {target}. {target.endsWith('8002')&&'İnceleme için analizi bu ayrı TEST alanında oluşturun; 8001 kayıtları taşınmaz.'}</p>
       {!supported && <p role="alert">Bu tarayıcı rVFC desteklemiyor; gerçek PTS olmadan analiz yapılmaz.</p>}
       {(error || state.message) && <p className={error || state.phase === 'failed' ? 'va-error' : 'va-status'} role={error || state.phase === 'failed' ? 'alert' : 'status'}>{error || state.message}</p>}
       {media && <div className="va-player"><video key={media.url} ref={video} src={media.url} preload="auto" playsInline muted
@@ -60,8 +62,8 @@ export default function VideoAnalysisPage() {
       <label className="va-progress">Plan ilerlemesi: {state.attempted} / {state.total} yuva<progress value={state.attempted} max={Math.max(1, state.total)} /></label>
       <p>Yerel örnek alınamayan yuva: {state.gaps}. Bu yuvalar backend’de uydurma kare/skip kaydı oluşturmaz; analiz edilmemiş aralık kalır. Oynatma ilerlemesi analiz kapsamından bağımsızdır.</p>
     </section>
-    {info && <VideoTimeline events={state.summary?.events ?? []} durationMs={info.durationMs} currentMs={currentMs} onSeek={seek} />}
+    {info && <VideoTimeline key={state.session?.runId??media?.id??'empty'} events={state.summary?.events ?? []} durationMs={info.durationMs} currentMs={currentMs} onSeek={seek} />}
     <VideoStage frame={state.frozen} />
-    <VideoSummary summary={state.summary} onSeek={seek} />
+    <VideoSummary key={state.session?.runId??'empty'} summary={state.summary} session={state.session} onSeek={seek} />
   </div>
 }

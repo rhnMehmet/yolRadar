@@ -3181,6 +3181,2936 @@
           "analysisStatus": "running"
         }
       }
+    },
+    {
+      "id": "m4b-recorded-box",
+      "kind": "frame",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-box-negative",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": -1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-box-overflow",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 1,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-box-zero",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-box-string",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": "0.1",
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-box-extra",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3,
+              "path": "NOT_A_PATH"
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-obs-wrong-run",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "other",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-obs-wrong-frame",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "other",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-obs-wrong-model",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "other",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-obs-wrong-pts",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1100
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1100
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-bad-score",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": true,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-wrong-evidence-time",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1000
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-wrong-image-size",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 1,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-missing-boxes",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-duplicate-box",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          },
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-source-path",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ],
+        "path": "NOT_A_PATH",
+        "eventId": "event-1"
+      }
+    },
+    {
+      "id": "m4b-summary-rejected-separate",
+      "kind": "summary",
+      "valid": true,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-count-mismatch",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 1,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-included-mismatch",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 2,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-location-mismatch",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 1,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-class-mismatch",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 2,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-slot-mismatch",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 2
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-coverage-count",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 2,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-coverage-gap",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-coverage-string",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": "1000",
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-coverage-overlap",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 2000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-summary-model",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "other",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-summary-extra",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false,
+        "token": "NOT_A_CREDENTIAL"
+      }
+    },
+    {
+      "id": "m4b-summary-boolean",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": true,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-unproven-verification",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 1,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-missing-time",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": null,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-time-outside",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 5000,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-summary-production",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "PRODUCTION",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 2,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
+    },
+    {
+      "id": "m4b-missing-event",
+      "kind": "frame",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "candidateId": "candidate-1",
+        "canonicalClass": "pothole",
+        "frame": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "plannedSampleTimestampMs": 1000,
+          "capturedAt": {
+            "clockDomain": "VIDEO",
+            "clockId": "fixture-clock",
+            "videoId": "fixture-video",
+            "valueMs": 1001.001001001001
+          }
+        },
+        "evidence": {
+          "frameId": "frame-1",
+          "width": 640,
+          "height": 360,
+          "available": true,
+          "mime": "image/png",
+          "videoTimestampMs": 1001.001001001001
+        },
+        "observations": [
+          {
+            "contractVersion": 2,
+            "sessionId": "fixture-session",
+            "runId": "fixture-run",
+            "sourceDomain": "REPLAY",
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1",
+            "observationId": "obs-1",
+            "frameId": "frame-1",
+            "capturedAt": {
+              "clockDomain": "VIDEO",
+              "clockId": "fixture-clock",
+              "videoId": "fixture-video",
+              "valueMs": 1001.001001001001
+            },
+            "rawClassId": "raw-A",
+            "canonicalClass": "pothole",
+            "confidence": 0.8,
+            "box": {
+              "x": 0.1,
+              "y": 0.2,
+              "width": 0.2,
+              "height": 0.3
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "m4b-raw-count-too-small",
+      "kind": "summary",
+      "valid": false,
+      "mapEligibleTest": false,
+      "mapEligibleProduction": false,
+      "value": {
+        "contractVersion": 2,
+        "sessionId": "fixture-session",
+        "runId": "fixture-run",
+        "sourceDomain": "REPLAY",
+        "detectorKind": "TEST",
+        "modelVersion": "synthetic-model-v1",
+        "classMapVersion": "synthetic-map-v1",
+        "environment": "TEST",
+        "resultOrigin": "TEST_SYNTHETIC",
+        "session": {
+          "contractVersion": 2,
+          "sessionId": "fixture-session",
+          "runId": "fixture-run",
+          "sourceDomain": "REPLAY",
+          "clockDomain": "VIDEO",
+          "clockId": "fixture-clock",
+          "status": "active",
+          "detector": {
+            "detectorKind": "TEST",
+            "modelVersion": "synthetic-model-v1",
+            "classMapVersion": "synthetic-map-v1"
+          },
+          "videoId": "fixture-video",
+          "videoDurationMs": 4000,
+          "samplingIntervalMs": 1000,
+          "recordingOrigin": "UNKNOWN",
+          "analysisStatus": "running"
+        },
+        "totalEvents": 2,
+        "includedEvents": 1,
+        "rawObservationCount": 0,
+        "reviewCounts": {
+          "pending": 1,
+          "approved": 0,
+          "rejected": 1
+        },
+        "locationCounts": {
+          "UNKNOWN": 2,
+          "ESTIMATED": 0,
+          "VERIFIED": 0
+        },
+        "classCounts": {
+          "pothole": 1,
+          "longitudinal_crack": 0,
+          "transverse_crack": 0,
+          "alligator_crack": 0,
+          "other": 0,
+          "unknown": 0
+        },
+        "slots": {
+          "planned": 4,
+          "analyzed": 1,
+          "skipped": 0,
+          "failed": 0,
+          "unattempted": 3
+        },
+        "coverage": {
+          "basis": "DECLARED_SAMPLING_GRID",
+          "samplingIntervalMs": 1000,
+          "status": "partial",
+          "analyzedFrames": 1,
+          "skippedFrames": 0,
+          "failedFrames": 0,
+          "coveredRanges": [
+            {
+              "startMs": 1000,
+              "endMs": 2000
+            }
+          ],
+          "unanalysedRanges": [
+            {
+              "startMs": 0,
+              "endMs": 1000
+            },
+            {
+              "startMs": 2000,
+              "endMs": 4000
+            }
+          ]
+        },
+        "firstDamageTimestampMs": 1001.001001001001,
+        "lastDamageTimestampMs": 1001.001001001001,
+        "verifiedCount": 0,
+        "verifiedRelations": [],
+        "verifiedTruncated": false
+      }
     }
   ]
 }

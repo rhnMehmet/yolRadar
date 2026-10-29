@@ -1,16 +1,18 @@
+import { useEffect,useRef,useState } from 'react'
 import type { VideoTimelineEvent } from '@roadsense/shared'
-import { classLabel, formatTime, markerPercent } from './videoSampling.ts'
-export function VideoTimeline({ events, durationMs, currentMs, onSeek }: { events: readonly VideoTimelineEvent[]; durationMs: number; currentMs: number; onSeek: (seconds: number) => void }) {
-  return <section className="va-card" aria-labelledby="timeline-title">
-    <h3 id="timeline-title">Video zamanı ve olay işaretleri</h3>
-    <label className="va-scrubber">Oynatma konumu · {formatTime(currentMs)} / {formatTime(durationMs)}
-      <input aria-label="Video zamanına git" type="range" min="0" max={durationMs / 1000} step="0.001" value={Math.min(currentMs, durationMs) / 1000} onChange={e => onSeek(Number(e.target.value))} />
-    </label>
-    <div className="va-marker-track" aria-label="Gerçek PTS olay işaretleri">
-      {events.map((event, i) => <button type="button" key={event.eventId} style={{ left: `${markerPercent(event.videoTimestampMs, durationMs)}%`, top: `${(i % 3) * 24}px` }}
-        title={`${classLabel(event.canonicalClass)} · ${formatTime(event.videoTimestampMs)}`} aria-label={`${classLabel(event.canonicalClass)}, ${formatTime(event.videoTimestampMs)} zamanına git`}
-        onClick={() => onSeek(event.videoTimestampMs / 1000)}>{i + 1}</button>)}
-    </div>
-    <p>Numaralı işaretler backend olaylarına bağlıdır. Aynı zamanda birden çok olay olabilir; tamamlanan raporda tıklamak yeni analiz başlatmaz.</p>
+import { classLabel,formatTime } from './videoSampling.ts'
+import { clusterTimeline,filterTimeline } from './timelinePresentation.ts'
+export function VideoTimeline({events,durationMs,currentMs,onSeek}:{events:readonly VideoTimelineEvent[];durationMs:number;currentMs:number;onSeek:(seconds:number)=>void}){
+  const track=useRef<HTMLDivElement>(null),trigger=useRef<HTMLButtonElement|null>(null)
+  const [width,setWidth]=useState(320),[open,setOpen]=useState<string|null>(null),[page,setPage]=useState(0),[kind,setKind]=useState(''),[status,setStatus]=useState('')
+  useEffect(()=>{const node=track.current;if(!node)return;const update=()=>setWidth(node.clientWidth);update();const observer=new ResizeObserver(update);observer.observe(node);return()=>observer.disconnect()},[])
+  const filtered=filterTimeline(events,kind,status),clusters=clusterTimeline(filtered,durationMs,width)
+  const cluster=clusters.find(c=>c.key===open),close=()=>{setOpen(null);trigger.current?.focus()}
+  return <section className="va-card" aria-labelledby="timeline-title"><h3 id="timeline-title">Video zamanı ve olay işaretleri</h3>
+    <label className="va-scrubber">Oynatma konumu · {formatTime(currentMs)} / {formatTime(durationMs)}<input aria-label="Video zamanına git" type="range" min="0" max={durationMs/1000} step="0.001" value={Math.min(currentMs,durationMs)/1000} onChange={e=>onSeek(Number(e.target.value))}/></label>
+    <div className="va-controls"><label>Timeline sınıfı<select value={kind} onChange={e=>{setKind(e.target.value);setOpen(null)}}><option value="">Tüm sınıflar</option>{['pothole','longitudinal_crack','transverse_crack','alligator_crack','other','unknown'].map(c=><option key={c} value={c}>{classLabel(c)}</option>)}</select></label><label>Timeline içerik durumu<select value={status} onChange={e=>{setStatus(e.target.value);setOpen(null)}}><option value="">Rapora dahil durumlar</option><option value="pending">Bekleyen</option><option value="approved">Onaylanan</option></select></label></div>
+    <div ref={track} className="va-cluster-track" aria-label="Görsel olay kümeleri">{clusters.map(c=><button type="button" key={c.key} style={{left:c.percent+'%'}} aria-expanded={c.events.length>1?open===c.key:undefined} aria-label={c.events.length+' olay, '+formatTime(c.firstMs)+(c.events.length>1?' grubu aç':' zamanına git')} onClick={e=>{trigger.current=e.currentTarget;setPage(0);if(c.events.length===1){onSeek(c.events[0].videoTimestampMs/1000);setOpen(null)}else setOpen(open===c.key?null:c.key)}}>{c.events.length}</button>)}</div>
+    <p>{filtered.length} / {events.length} rapor olayı · {clusters.length} görsel işaret. Görsel kümeler fiziksel hasar takibi değildir; olay kimlikleri ve sayıları değişmez. Reddedilenler İnceleme ekranından okunur.</p>
+    {cluster&&<div className="va-cluster-detail" onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();close()}}}><div className="va-card-heading"><h4>{cluster.events.length} olay · {formatTime(cluster.firstMs)}–{formatTime(cluster.lastMs)}</h4><button type="button" onClick={close}>Grubu kapat</button></div><ol>{cluster.events.slice(page*20,(page+1)*20).map(e=><li key={e.eventId}><button type="button" onClick={()=>onSeek(e.videoTimestampMs/1000)}>{classLabel(e.canonicalClass)} · {formatTime(e.videoTimestampMs)} · {e.reviewStatus}</button></li>)}</ol><div className="va-controls"><button type="button" disabled={!page} onClick={()=>setPage(page-1)}>Önceki olaylar</button><span>{page+1}/{Math.max(1,Math.ceil(cluster.events.length/20))}</span><button type="button" disabled={(page+1)*20>=cluster.events.length} onClick={()=>setPage(page+1)}>Sonraki olaylar</button></div></div>}
   </section>
 }

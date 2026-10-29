@@ -178,3 +178,76 @@ Python bağımsız PowerShell ortamı ve paket sürümleri korunur; yeni paket k
 Bu bir geliştirme/prototip altyapısıdır. Gerçek RBAC/SSO/TLS, ölçek/yük testi,
 üretim audit saklama ve karar düzeltme akışı ayrı çalışma gerektirir. HTTPX uyarısı,
 Expo Doctor 20/21, mobil audit ve Zod bildirimi bu görevde çözülmemiştir.
+
+## M4B uygulaması
+
+İnceleme artık lazy web bölümüdür. Oturum ve aday sayfaları, durum/sınıf filtreleri,
+ayrı kimlik, kayıtlı kanıt, box overlay ve içerik kararı gerçek reviewer API'sine
+bağlıdır. Sabit frontend hasar veya kutu üretilmez. Sunucu yetkisi girişte doğrulanır.
+
+Yeni metadata GET'i `/v1/review/sessions/{sessionId}/runs/{runId}/candidates/{candidateId}/evidence`
+aday/event/frame ilişkisini ve her gözlemin owner/scope/detector/frame/PTS/sınıfını
+doğrular. Yanıtın `items` öğeleri ReviewFrame DTO'sudur. `evidence.frameId` mevcut
+binary endpointine güvenli indirme referansıdır. Fotoğraf/video yolu dönmez.
+Sayfa en fazla 100 gözlem ve 20 frame; büyük gruplar imzalı cursor ile devam eder.
+2 MiB UTF-8 yanıt üst sınırı aşılırsa 413 olur. M4A önizleme sınırları korunur.
+
+Yeni `/v1/review/sessions/{sessionId}/runs/{runId}/summary`, aynı SQLite transaction'ı
+içinde tutarlı sayımlar yapar. `totalEvents` tüm olaylar, `includedEvents` rapora
+dahil pending+approved olaylardır. `reviewCounts` tüm içerik durumları;
+`locationCounts` UNKNOWN/ESTIMATED/VERIFIED hasar konumlarıdır. Sınıf dağılımı ve
+ilk/son zaman rapora dahil kümeye aittir. `verifiedCount`, `verifiedRelations`
+(ilk 100) ve `verifiedTruncated` ayrıdır. Bunlar bakım durumları değildir.
+
+Özet örneği (yalnız alan kesiti; sentetik):
+
+```json
+{
+  "totalEvents": 2,
+  "includedEvents": 1,
+  "reviewCounts": {"pending": 0, "approved": 1, "rejected": 1},
+  "locationCounts": {"UNKNOWN": 2, "ESTIMATED": 0, "VERIFIED": 0},
+  "slots": {"planned": 4, "analyzed": 1, "skipped": 0, "failed": 0, "unattempted": 3}
+}
+```
+
+Owner summary'nin anlamı ve yetkisi korunur. Reviewer candidates ucundaki yeni
+isteğe bağlı candidateId filtresi, karar/409 sonrası tek güncel kaydı session/run
+kapsamında alır. Eski snapshot'ı güncel içerik kararı gibi yorumlamaz.
+
+Web hedefleri açık loopback allowlist'idir. Analiz ekranı 8001 ile açılır; İnceleme
+8002 TEST alanıyla açılır. Her iki ekranda hedef değişimi token ve yetkili veriyi
+temizler. Kimlikler component/controller ömründe bellektedir; kaynak, VITE, URL,
+kalıcı browser storage veya loglarda bulunmaz. İnceleme token'ı analiz istemcisine
+geçmez. Çıkış bir sunucu token iptal servisi değildir; yerel belleği temizler.
+
+Kanıt authenticated fetch ile alınır. MIME/boyut/dosya imzası, DTO/scope/detector,
+aday/event/frame/PTS ve img doğal boyutu kontrol edilir. Blob URL seçim değişimi,
+çıkış ve unmount'ta revoke edilir. Eski response ve eski img hatası yeni görüntüyü
+değiştiremez. Normalize kutular görüntünün kendi aspect-ratio düzleminde çizilir;
+fullscreen/portrait kenar boşluğu üzerine yanlış kutu taşınmaz.
+
+Karar düğmesi bir commandId ve expectedReviewRevision üretir; çift tıklama ikinci
+POST oluşturmaz. 409 canonical kaydı yeniler. Timeout, sunucunun karar yazmadığını
+kanıtlamaz: güncel kayıt okunur, hâlâ belirsizse yeni karar engellenir ve aynı
+komutla kontrollü tekrar sunulur. Token/hedef değişimi ve çıkış bu yerel bekleme
+durumunu temizler; sunucuda geri alma yapmaz. Gerçek kullanıcı medyasında otomatik
+karar verilmez; HTTP kanıt testleri yalnız M4B-SYNTHETIC oturumlarını seçer.
+
+Timeline, görünür genişlikte yaklaşık 44 CSS px alanlara göre saf görsel kümeler
+üretir. Grup listesi 20 olay/sayfa gösterir; seçilen olayın özgün PTS'sine seek
+yapılır. EventId/sayı/veri değişmez ve events/group çağrılmaz. Tab/Enter/Space doğal
+buton davranışını, Escape kapatma/fokus dönüşünü kullanır. Timeline bu owner
+raporuna dahil olayları gösterir; reddedilenler ayrı İnceleme kaynağındadır.
+
+VideoSummary korunarak video süresi, plan/başarı/skipped/failed/unattempted, başarılı
+kapsam dışı yuva/süre, olay/sınıf/model bilgileri ve sayfalı olay listesi eklendi.
+Unattempted=N−A−S−F; başarı dışı=N−A. Sahipsiz/yerel örnekleme boşluğu backend skip
+diye yazılmaz. Owner özeti konum doğrulaması sağlamadığında arayüz bunu açık söyler;
+UNKNOWN veya verified değeri uydurmaz. Yeni video/run eski timeline/rapor görünümünü
+temizler. Yeni npm/Python paketi veya migration yoktur.
+
+M4C uygulanmadı; üretim harita katmanı TEST-only ortamda boş kalır. M5A mobil UI/UX
+ve sonraki kamera/ses/entegrasyon adımları ayrı onay bekler. Tarayıcı, viewport,
+fullscreen ve gerçek cihaz sonuçları otomatik unit testiyle eş tutulmaz; teslim
+raporu bağımsız kontrolleri, kullanıcı beyanlarını ve eksik testleri ayrı listeler.

@@ -13,6 +13,7 @@
 .video-analysis button:hover { background: #e7f2eb; }
 .video-analysis button:disabled { opacity: .5; cursor: not-allowed; }
 .video-analysis .va-primary { color: white; background: #0b6b59; }
+.video-analysis select{min-height:44px;max-width:100%;padding:8px;border:1px solid #b4c5ca;border-radius:6px;background:white;color:#233e48}.video-analysis button{min-height:44px}.va-cluster-track{position:relative;height:56px;margin:16px 0 4px;border-top:3px solid #b9d2c8}.video-analysis .va-cluster-track button{position:absolute;transform:translateX(-50%);min-width:40px;min-height:44px;padding:7px;background:#fcf0cc;border-color:#ad8137;color:#5c4319}.va-cluster-detail{border:1px solid #d3e3dc;padding:14px;border-radius:8px;background:#f8fbf9}.va-cluster-detail ol{display:grid;gap:7px;list-style:none;padding:0}.va-cluster-detail li button{width:100%;text-align:left}.video-analysis button:focus-visible,.video-analysis summary:focus-visible{outline:3px solid #257cbe;outline-offset:3px}.video-analysis details summary{cursor:pointer;padding:12px 0;font-size:12px}
 .va-error { color: #942b28; background: #fff0ef; padding: 12px; border-left: 3px solid #bc514b; }
 .va-status { background: #edf6f2; padding: 12px; }
 .va-player video { width: 100%; max-height: 480px; background: #13282f; object-fit: contain; display: block; }

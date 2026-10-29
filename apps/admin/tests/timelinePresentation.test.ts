@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import type {VideoTimelineEvent} from '@roadsense/shared'
+import {clusterTimeline,filterTimeline} from '../src/features/video-analysis/timelinePresentation.ts'
+import {video,scope} from '../../../packages/shared/tests/m1Fixtures.ts'
+const s=video(),events=Array.from({length:360},(_,i)=>({...scope(s),...s.detector,sourceDomain:'REPLAY',videoId:s.videoId,eventId:'event-'+i,videoTimestampMs:Math.floor(i/2)*1000+.001,lastVideoTimestampMs:Math.floor(i/2)*1000+.001,canonicalClass:i%2?'pothole':'longitudinal_crack',confidence:.8,observationIds:['obs-'+i],reviewStatus:i%3?'pending':'approved'})) as VideoTimelineEvent[]
+for(const width of [1440,820,390,320,100])test('360 original PTS/IDs preserved at width '+width,()=>{const snapshot=structuredClone(events),clusters=clusterTimeline(events,180000,width),flat=clusters.flatMap(c=>c.events);assert.ok(clusters.length<=Math.max(1,Math.floor(width/44)));assert.equal(flat.length,360);assert.deepEqual(new Set(flat.map(e=>e.eventId)),new Set(events.map(e=>e.eventId)));for(const e of flat)assert.equal(e.videoTimestampMs,events.find(v=>v.eventId===e.eventId)!.videoTimestampMs);assert.deepEqual(events,snapshot)})
+test('class/review filter changes only presentation',()=>{const filtered=filterTimeline(events,'pothole','approved');assert.ok(filtered.length>0&&filtered.every(e=>e.canonicalClass==='pothole'&&e.reviewStatus==='approved'));assert.equal(events.length,360)})
+test('identical timestamps remain separate events, invalid time rejected',()=>{const same=events.slice(0,40).map(e=>({...e,videoTimestampMs:1001.001001001001}));assert.equal(clusterTimeline(same,180000,320).length,1);assert.equal(clusterTimeline(same,180000,320)[0].events.length,40);assert.throws(()=>clusterTimeline([{...events[0],videoTimestampMs:180000}],180000,320));assert.deepEqual(clusterTimeline(events,0,320),[])})

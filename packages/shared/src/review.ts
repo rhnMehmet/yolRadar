@@ -1,4 +1,4 @@
-import type { CaptureSession, VideoAnalysisSession, SessionScope, DetectorIdentity, CanonicalClass, VerifiedDamage } from './contracts.ts'
+import type { CaptureSession, VideoAnalysisSession, SessionScope, DetectorIdentity, CanonicalClass, VerifiedDamage, ImageFrame, DetectionObservation, AnalysisCoverage } from './contracts.ts'
 import { canonicalClass, damageClass, finite, identifier, isCaptureSession, isVideoAnalysisSession, record, sameDetector, sameScope, isSessionScope } from './contractValidation.ts'
 export interface ReviewEvidence {
   frameId: string; width: number; height: number; available: boolean
@@ -82,4 +82,85 @@ export function isReviewItem(value: unknown): value is ReviewItem {
 export function isReviewMapEligible(value: unknown, layer: 'production' | 'test'): boolean {
   return layer === 'test' && isReviewItem(value) && value.locationStatus === 'VERIFIED' && value.reviewStatus === 'approved'
     && value.verifiedDamage?.damageLocation.position.kind === 'GPS'
+}
+
+export interface ReviewFrame extends SessionScope, DetectorIdentity {
+  environment: 'TEST'; resultOrigin: 'TEST_SYNTHETIC' | 'YOLO_RESULT'; candidateId: string; eventId?: string; canonicalClass: CanonicalClass
+  frame: ImageFrame; evidence: ReviewEvidence; observations: readonly DetectionObservation[]
+}
+export interface ReviewSummary extends SessionScope, DetectorIdentity {
+  environment: 'TEST'; resultOrigin: 'TEST_SYNTHETIC' | 'YOLO_RESULT'; sourceDomain: 'REPLAY'; session: VideoAnalysisSession
+  totalEvents: number; includedEvents: number; rawObservationCount: number
+  reviewCounts: { pending: number; approved: number; rejected: number }
+  locationCounts: { UNKNOWN: number; ESTIMATED: number; VERIFIED: number }
+  classCounts: Readonly<Record<CanonicalClass, number>>
+  slots: { planned: number; analyzed: number; skipped: number; failed: number; unattempted: number }
+  coverage: AnalysisCoverage; firstDamageTimestampMs: number | null; lastDamageTimestampMs: number | null
+  verifiedCount: number; verifiedRelations: readonly { candidateId: string; verifiedId: string }[]; verifiedTruncated: boolean
+}
+function counts(value: unknown, names: readonly string[]): value is Record<string, number> {
+  return record(value) && keys(value,names) && names.every(k => integer(value[k]))
+}
+export function isReviewFrame(value: unknown): value is ReviewFrame {
+  if (!record(value) || !keys(value,[...scopeKeys,...detectorKeys,'environment','resultOrigin','candidateId','eventId','canonicalClass','frame','evidence','observations'])
+    || !isSessionScope(value) || !sameDetector(value,value as unknown as DetectorIdentity) || value.environment !== 'TEST'
+    || value.resultOrigin !== origin(value.detectorKind) || !identifier(value.candidateId) || !canonicalClass(value.canonicalClass)) return false
+  const f = value.frame, e = value.evidence, scope = value as unknown as SessionScope
+  if (!record(f) || !keys(f,[...scopeKeys,'frameId','capturedAt','width','height','plannedSampleTimestampMs']) || !sameScope(f,scope)
+    || !identifier(f.frameId) || !integer(f.width,1,32768) || !integer(f.height,1,32768) || ('plannedSampleTimestampMs' in f && !finite(f.plannedSampleTimestampMs))
+    || !record(f.capturedAt) || !identifier(f.capturedAt.clockId) || !finite(f.capturedAt.valueMs)) return false
+  const t = f.capturedAt, replay = value.sourceDomain === 'REPLAY'
+  if (replay ? !identifier(value.eventId) : 'eventId' in value) return false
+  if (t.clockDomain !== {REPLAY:'VIDEO',REAL:'DEVICE_MONOTONIC',SIM:'SIMULATION'}[value.sourceDomain]
+    || !keys(t,replay ? ['clockDomain','clockId','valueMs','videoId'] : ['clockDomain','clockId','valueMs']) || (replay && !identifier(t.videoId))) return false
+  if (!record(e) || !keys(e,['frameId','width','height','available','mime','videoTimestampMs']) || e.frameId !== f.frameId || e.width !== f.width || e.height !== f.height
+    || typeof e.available !== 'boolean' || (e.available ? !['image/jpeg','image/png'].includes(e.mime as string) : 'mime' in e)
+    || (replay ? e.videoTimestampMs !== t.valueMs : 'videoTimestampMs' in e)) return false
+  if (!Array.isArray(value.observations) || !value.observations.length || value.observations.length > 100) return false
+  const seen = new Set<string>()
+  for (const o of value.observations) {
+    if (!record(o) || !keys(o,[...scopeKeys,...detectorKeys,'observationId','frameId','capturedAt','rawClassId','canonicalClass','confidence','box'])
+      || !sameScope(o,scope) || !sameDetector(o,value as unknown as DetectorIdentity) || !identifier(o.observationId) || seen.has(o.observationId)
+      || o.frameId !== f.frameId || !identifier(o.rawClassId) || o.canonicalClass !== value.canonicalClass || !finite(o.confidence,0,1)
+      || !record(o.capturedAt) || !keys(o.capturedAt,Object.keys(t)) || Object.keys(t).some(k=>(o.capturedAt as Record<string,unknown>)[k] !== t[k])) return false
+    const b=o.box
+    if (!record(b) || !keys(b,['x','y','width','height']) || !finite(b.x,0,1) || !finite(b.y,0,1) || !finite(b.width,Number.EPSILON,1) || !finite(b.height,Number.EPSILON,1) || b.x+b.width>1 || b.y+b.height>1) return false
+    seen.add(o.observationId)
+  }
+  return true
+}
+export function isReviewSummary(v: unknown): v is ReviewSummary {
+  if (!record(v) || !keys(v,[...scopeKeys,...detectorKeys,'environment','resultOrigin','session','totalEvents','includedEvents','rawObservationCount','reviewCounts','locationCounts','classCounts','slots','coverage','firstDamageTimestampMs','lastDamageTimestampMs','verifiedCount','verifiedRelations','verifiedTruncated'])
+    || !isSessionScope(v) || v.sourceDomain !== 'REPLAY' || !sameDetector(v,v as unknown as DetectorIdentity)
+    || !isReviewSession({environment:v.environment,resultOrigin:v.resultOrigin,session:v.session}) || !record(v.session)
+    || !sameScope(v.session,v) || !record(v.session.detector) || !sameDetector(v,v.session.detector as unknown as DetectorIdentity)) return false
+  const s=v.session as unknown as VideoAnalysisSession
+  if (!integer(v.totalEvents) || !integer(v.includedEvents) || !integer(v.rawObservationCount) || !integer(v.verifiedCount)
+    || !counts(v.reviewCounts,['pending','approved','rejected']) || !counts(v.locationCounts,['UNKNOWN','ESTIMATED','VERIFIED'])
+    || !counts(v.classCounts,['pothole','longitudinal_crack','transverse_crack','alligator_crack','other','unknown'])
+    || !counts(v.slots,['planned','analyzed','skipped','failed','unattempted'])) return false
+  const r=v.reviewCounts,l=v.locationCounts,n=v.slots,c=v.coverage
+  if(v.rawObservationCount<v.totalEvents || v.verifiedCount>r.approved)return false
+  if (r.pending+r.approved+r.rejected!==v.totalEvents || r.pending+r.approved!==v.includedEvents || l.UNKNOWN+l.ESTIMATED+l.VERIFIED!==v.totalEvents
+    || l.VERIFIED!==v.verifiedCount || Object.values(v.classCounts).reduce((a,b)=>a+b,0)!==v.includedEvents
+    || n.planned!==Math.ceil(s.videoDurationMs/s.samplingIntervalMs) || n.planned!==n.analyzed+n.skipped+n.failed+n.unattempted
+    || !record(c) || !keys(c,['basis','samplingIntervalMs','status','analyzedFrames','skippedFrames','failedFrames','coveredRanges','unanalysedRanges'])
+    || c.basis!=='DECLARED_SAMPLING_GRID' || c.samplingIntervalMs!==s.samplingIntervalMs
+    || c.analyzedFrames!==n.analyzed || c.skippedFrames!==n.skipped || c.failedFrames!==n.failed
+    || !Array.isArray(c.coveredRanges) || !Array.isArray(c.unanalysedRanges)) return false
+  const ranges: {startMs:number;endMs:number}[]=[]; let covered=0
+  for (const [items,success] of [[c.coveredRanges,true],[c.unanalysedRanges,false]] as const) for (const range of items) {
+    if (!record(range) || !keys(range,['startMs','endMs']) || !finite(range.startMs,0,s.videoDurationMs) || !finite(range.endMs,0,s.videoDurationMs)
+      || range.startMs>=range.endMs || range.startMs%s.samplingIntervalMs!==0 || (range.endMs!==s.videoDurationMs && range.endMs%s.samplingIntervalMs!==0)) return false
+    ranges.push({startMs:range.startMs,endMs:range.endMs})
+    if (success) covered+=Math.ceil(range.endMs/s.samplingIntervalMs)-range.startMs/s.samplingIntervalMs
+  }
+  ranges.sort((a,b)=>a.startMs-b.startMs)
+  if (!ranges.length || ranges[0].startMs!==0 || ranges.at(-1)!.endMs!==s.videoDurationMs || ranges.some((r,i)=>i>0 && ranges[i-1].endMs!==r.startMs) || covered!==n.analyzed
+    || c.status!==(n.analyzed===n.planned?'complete':n.analyzed?'partial':'none') || (s.analysisStatus==='completed' && c.status!=='complete')) return false
+  if (v.includedEvents===0 ? v.firstDamageTimestampMs!==null || v.lastDamageTimestampMs!==null
+    : !finite(v.firstDamageTimestampMs,0,s.videoDurationMs) || !finite(v.lastDamageTimestampMs,v.firstDamageTimestampMs,s.videoDurationMs) || v.lastDamageTimestampMs===s.videoDurationMs) return false
+  return Array.isArray(v.verifiedRelations) && v.verifiedRelations.length===Math.min(100,v.verifiedCount) && v.verifiedTruncated===(v.verifiedCount>100)
+    && v.verifiedRelations.every(r=>record(r) && keys(r,['candidateId','verifiedId']) && identifier(r.candidateId) && identifier(r.verifiedId))
+    && new Set(v.verifiedRelations.map(r=>r.verifiedId)).size===v.verifiedRelations.length
 }

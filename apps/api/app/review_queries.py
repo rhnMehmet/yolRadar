@@ -4,12 +4,14 @@ from datetime import datetime, timezone
 import hashlib
 import hmac
 import json
+import math
 import re
 import time
 from typing import Annotated, Literal
 from pydantic import Field, model_validator
 from .contracts import (ApiError, CanonicalClass, DetectorIdentity, Exact, Id,
-    NonNegative, SafeInt, Score, Scope, VerifiedDamage, parse_session, require, same_detector, same_scope, scope, wire)
+    NonNegative, SafeInt, Score, Scope, VerifiedDamage, ImageFrame, DetectionObservation, VideoAnalysisSession,
+    parse_session, require, same_detector, same_scope, scope, wire)
 
 Revision = Annotated[SafeInt, Field(ge=0)]
 def digest(value):
@@ -252,6 +254,7 @@ def list_candidates(engine, principal, sid, run, filters, limit, cursor, map_mod
         clauses = ["c.kind='candidate'", "s.kind='session'", 'c.run=s.run', 'c.owner=s.owner', 'c.created<=?', 'c.id>?']
         args = [snapshot, after[1] if domain == after[0] else '']
         if sid: clauses.extend(['c.sid=?','c.run=?']); args.extend([sid, run])
+        if filters.get('candidateId'): clauses.append('c.id=?'); args.append(filters['candidateId'])
         for key, field in [('canonicalClass', '$.candidate.canonicalClass')]:
             if filters.get(key): clauses.append('json_extract(c.payload, ?) = ?'); args.extend([field, filters[key]])
         if filters.get('detectorKind'):
@@ -266,3 +269,232 @@ def list_candidates(engine, principal, sid, run, filters, limit, cursor, map_mod
         sql="SELECT c.* FROM records c JOIN records s ON s.id=c.sid LEFT JOIN records e ON e.kind='event' AND e.id=json_extract(c.payload,'$.eventId') AND e.sid=c.sid AND e.run=c.run WHERE "+' AND '.join(clauses)+' ORDER BY c.id LIMIT ?'
         return [dict(r, payload=json.loads(r['payload'])) for r in db.execute(sql,[*args,size])]
     return page(engine, principal, 'map' if map_mode else sid+':'+run, filters, limit, cursor, query)
+
+
+class ReviewFrame(Scope, DetectorIdentity, Exact):
+    environment: Literal['TEST']
+    resultOrigin: Literal['TEST_SYNTHETIC', 'YOLO_RESULT']
+    candidateId: Id
+    eventId: Id | None = None
+    canonicalClass: CanonicalClass
+    frame: ImageFrame
+    evidence: EvidenceRef
+    observations: list[DetectionObservation] = Field(min_length=1, max_length=100)
+
+    @model_validator(mode='before')
+    @classmethod
+    def strict_nested(cls, value):
+        if isinstance(value, dict):
+            if 'eventId' in value and value['eventId'] is None: raise ValueError('omit_unknown_fields')
+            for key, model in [('frame', ImageFrame)]:
+                if key in value and wire(model.model_validate(value[key])) != value[key]:
+                    raise ValueError('unexpected_frame_fields')
+            for obs in value.get('observations', []):
+                if wire(DetectionObservation.model_validate(obs)) != obs:
+                    raise ValueError('unexpected_observation_fields')
+        return value
+
+    @model_validator(mode='after')
+    def validate_links(self):
+        if self.resultOrigin != ('TEST_SYNTHETIC' if self.detectorKind == 'TEST' else 'YOLO_RESULT'):
+            raise ValueError('wrong_origin')
+        same_scope(wire(self.frame), wire(self))
+        if (self.frame.frameId, self.frame.width, self.frame.height) != (self.evidence.frameId, self.evidence.width, self.evidence.height):
+            raise ValueError('frame_mismatch')
+        if self.evidence.available != (self.evidence.mime is not None):
+            raise ValueError('invalid_evidence')
+        replay = self.sourceDomain == 'REPLAY'
+        if replay != (self.eventId is not None): raise ValueError('event_reference_required')
+        if replay != (self.evidence.videoTimestampMs is not None) or (replay and self.evidence.videoTimestampMs != self.frame.capturedAt.valueMs):
+            raise ValueError('pts_mismatch')
+        expected_clock = {'REPLAY':'VIDEO','REAL':'DEVICE_MONOTONIC','SIM':'SIMULATION'}[self.sourceDomain]
+        if self.frame.capturedAt.clockDomain != expected_clock:
+            raise ValueError('clock_mismatch')
+        if len({o.observationId for o in self.observations}) != len(self.observations):
+            raise ValueError('duplicate_observation')
+        for obs in self.observations:
+            same_scope(wire(obs), wire(self)); same_detector(wire(obs), {'detector':{k:getattr(self,k) for k in ('detectorKind','modelVersion','classMapVersion')}})
+            if obs.frameId != self.frame.frameId or wire(obs.capturedAt) != wire(self.frame.capturedAt) or obs.canonicalClass != self.canonicalClass:
+                raise ValueError('observation_frame_mismatch')
+        return self
+
+
+class ReviewSlots(Exact):
+    planned: Revision
+    analyzed: Revision
+    skipped: Revision
+    failed: Revision
+    unattempted: Revision
+
+    @model_validator(mode='after')
+    def counts(self):
+        if self.planned != self.analyzed + self.skipped + self.failed + self.unattempted:
+            raise ValueError('slot_counts')
+        return self
+
+
+class ReviewSummary(Scope, DetectorIdentity, Exact):
+    sourceDomain: Literal['REPLAY']
+    environment: Literal['TEST']
+    resultOrigin: Literal['TEST_SYNTHETIC', 'YOLO_RESULT']
+    session: VideoAnalysisSession
+    totalEvents: Revision
+    includedEvents: Revision
+    rawObservationCount: Revision
+    reviewCounts: dict[Literal['pending','approved','rejected'], Revision]
+    locationCounts: dict[Literal['UNKNOWN','ESTIMATED','VERIFIED'], Revision]
+    classCounts: dict[CanonicalClass, Revision]
+    slots: ReviewSlots
+    coverage: dict
+    firstDamageTimestampMs: NonNegative | None
+    lastDamageTimestampMs: NonNegative | None
+    verifiedCount: Revision
+    verifiedRelations: list[dict[Literal['candidateId','verifiedId'], Id]] = Field(max_length=100)
+    verifiedTruncated: bool
+
+    @model_validator(mode='before')
+    @classmethod
+    def exact_session(cls, value):
+        if isinstance(value, dict) and 'session' in value and parse_session(value['session']) != value['session']:
+            raise ValueError('unexpected_session_fields')
+        return value
+
+    @model_validator(mode='after')
+    def consistent(self):
+        from .contracts import CLASSES
+        same_scope(wire(self.session), wire(self)); same_detector(wire(self), wire(self.session))
+        if self.resultOrigin != ('TEST_SYNTHETIC' if self.detectorKind == 'TEST' else 'YOLO_RESULT'):
+            raise ValueError('origin_mismatch')
+        if set(self.reviewCounts) != {'pending','approved','rejected'} or sum(self.reviewCounts.values()) != self.totalEvents or self.includedEvents != self.reviewCounts['pending'] + self.reviewCounts['approved']:
+            raise ValueError('review_counts')
+        if self.rawObservationCount < self.totalEvents or self.verifiedCount > self.reviewCounts['approved']:
+            raise ValueError('proven_counts')
+        if set(self.locationCounts) != {'UNKNOWN','ESTIMATED','VERIFIED'} or sum(self.locationCounts.values()) != self.totalEvents or self.verifiedCount != self.locationCounts['VERIFIED']:
+            raise ValueError('location_counts')
+        if set(self.classCounts) != set(CLASSES) or sum(self.classCounts.values()) != self.includedEvents:
+            raise ValueError('class_counts')
+        if self.slots.planned != math.ceil(self.session.videoDurationMs / self.session.samplingIntervalMs):
+            raise ValueError('planned_slots')
+        c = self.coverage
+        expected_keys = {'basis','samplingIntervalMs','status','analyzedFrames','skippedFrames','failedFrames','coveredRanges','unanalysedRanges'}
+        if set(c) != expected_keys or c['basis'] != 'DECLARED_SAMPLING_GRID' or c['samplingIntervalMs'] != self.session.samplingIntervalMs:
+            raise ValueError('coverage_fields')
+        if any(type(c[k]) not in (int,float) or isinstance(c[k],bool) or c[k] != n for k,n in [('analyzedFrames',self.slots.analyzed),('skippedFrames',self.slots.skipped),('failedFrames',self.slots.failed)]):
+            raise ValueError('coverage_counts')
+        ranges = []
+        analyzed_slots = 0
+        for key in ('coveredRanges','unanalysedRanges'):
+            if not isinstance(c[key],list): raise ValueError('coverage_ranges')
+            for r in c[key]:
+                if not isinstance(r,dict) or set(r) != {'startMs','endMs'}: raise ValueError('coverage_range')
+                a,b = r['startMs'],r['endMs']; interval = self.session.samplingIntervalMs
+                if type(a) not in (int,float) or type(b) not in (int,float) or not 0 <= a < b <= self.session.videoDurationMs or a % interval != 0 or (b != self.session.videoDurationMs and b % interval != 0):
+                    raise ValueError('coverage_range')
+                ranges.append((a,b))
+                if key == 'coveredRanges': analyzed_slots += math.ceil(b/interval)-a/interval
+        ranges.sort()
+        if not ranges or ranges[0][0] != 0 or ranges[-1][1] != self.session.videoDurationMs or any(ranges[i-1][1] != ranges[i][0] for i in range(1,len(ranges))) or analyzed_slots != self.slots.analyzed:
+            raise ValueError('coverage_partition')
+        status = 'complete' if self.slots.analyzed == self.slots.planned else 'partial' if self.slots.analyzed else 'none'
+        if c['status'] != status or (self.session.analysisStatus == 'completed' and status != 'complete'):
+            raise ValueError('coverage_status')
+        if (self.includedEvents == 0) != (self.firstDamageTimestampMs is None and self.lastDamageTimestampMs is None):
+            raise ValueError('event_times')
+        if self.includedEvents and (self.firstDamageTimestampMs is None or self.lastDamageTimestampMs is None or not 0 <= self.firstDamageTimestampMs <= self.lastDamageTimestampMs < self.session.videoDurationMs):
+            raise ValueError('event_times')
+        if len(self.verifiedRelations) != min(100,self.verifiedCount) or self.verifiedTruncated != (self.verifiedCount > 100) or any(set(r) != {'candidateId','verifiedId'} for r in self.verifiedRelations) or len({r['verifiedId'] for r in self.verifiedRelations}) != len(self.verifiedRelations):
+            raise ValueError('verified_relations')
+        return self
+
+
+def bounded_review(value):
+    if len(json.dumps(value, allow_nan=False, separators=(',',':')).encode()) > 2 * 1024 * 1024:
+        raise ApiError(413, 'review_response_too_large')
+    return value
+
+
+def candidate_evidence(engine, principal, sid, run, cid, limit, cursor):
+    require_reviewer(engine, principal)
+    domain, _ = engine.locate(principal, sid, run, review=True)
+    context = digest([principal.id, sorted(principal.domains), 'TEST', sid, run, cid, limit, 'candidate-evidence'])
+    offset = 0
+    if cursor:
+        try:
+            payload, signature = cursor.split('.')
+            require(hmac.compare_digest(signature,hmac.new(engine.review_cursor_key,payload.encode(),hashlib.sha256).hexdigest()))
+            state = json.loads(base64.urlsafe_b64decode(payload+'='*(-len(payload)%4)))
+            require(state['context'] == context and type(state['offset']) is int and 0 < state['offset'] <= 10000)
+            offset = state['offset']
+        except Exception: raise ApiError(422,'invalid_cursor') from None
+    from .sessions import frame_key
+    with engine.store.tx(domain) as db:
+        current = engine.store.get(db,'session',sid)
+        if current['run'] != run: raise ApiError(409,'stale_run')
+        row = engine.store.get(db,'candidate',cid)
+        if row is None or (row['sid'],row['run'],row['owner']) != (sid,run,current['owner']): raise ApiError(404,'candidate_not_found')
+        session = current['payload']['session']; candidate = row['payload']['candidate']
+        same_scope(candidate,session); same_detector(candidate,session)
+        event_ref = {}
+        if domain == 'REPLAY':
+            event = engine.store.get(db,'event',row['payload'].get('eventId',''))
+            require(event is not None and (event['sid'],event['run'],event['owner']) == (sid,run,row['owner']) and set(event['payload']['observationIds']) == set(candidate['observationIds']), 'invalid_review_event')
+            event_ref = {'eventId':event['id']}
+        observations = []
+        for oid in candidate['observationIds']:
+            obs = engine.store.get(db,'observation',oid)
+            require(obs is not None and (obs['sid'],obs['run'],obs['owner']) == (sid,run,row['owner']), 'invalid_review_evidence')
+            same_scope(obs['payload'],session); same_detector(obs['payload'],session)
+            observations.append(obs['payload'])
+        observations.sort(key=lambda o:(o['capturedAt']['valueMs'],o['frameId'],o['observationId']))
+        require(offset < len(observations),'invalid_cursor')
+        selected = []; frame_ids = set()
+        for obs in observations[offset:offset+min(100,limit)]:
+            if obs['frameId'] not in frame_ids and len(frame_ids) == 20: break
+            selected.append(obs); frame_ids.add(obs['frameId'])
+        items = []
+        for fid in dict.fromkeys(o['frameId'] for o in selected):
+            row_frame = engine.store.get(db,'frame',frame_key(session,fid))
+            require(row_frame is not None and (row_frame['sid'],row_frame['run'],row_frame['owner']) == (sid,run,row['owner']), 'invalid_review_evidence')
+            packet = row_frame['payload']; frame = packet['frame']
+            available = packet.get('outcome') == 'analyzed' and packet.get('mime') in ('image/jpeg','image/png') and bool(packet.get('mediaName'))
+            ref = {'frameId':fid,'width':frame['width'],'height':frame['height'],'available':available,**({'mime':packet['mime']} if available else {}),**({'videoTimestampMs':frame['capturedAt']['valueMs']} if domain=='REPLAY' else {})}
+            items.append(wire(ReviewFrame(**scope(session),**session['detector'],**event_ref,environment='TEST',resultOrigin='TEST_SYNTHETIC' if session['detector']['detectorKind']=='TEST' else 'YOLO_RESULT',candidateId=cid,canonicalClass=candidate['canonicalClass'],frame=frame,evidence=ref,observations=[o for o in selected if o['frameId']==fid])))
+        end = offset + len(selected); next_cursor = None
+        if end < len(observations):
+            payload = base64.urlsafe_b64encode(json.dumps({'context':context,'offset':end},separators=(',',':')).encode()).decode().rstrip('=')
+            next_cursor = payload+'.'+hmac.new(engine.review_cursor_key,payload.encode(),hashlib.sha256).hexdigest()
+        return bounded_review({'environment':'TEST','candidateId':cid,'items':items,'observationCount':len(observations),'frameCount':len({o['frameId'] for o in observations}),'nextCursor':next_cursor})
+
+
+def reviewer_summary(engine, principal, sid, run):
+    require_reviewer(engine,principal)
+    domain,_ = engine.locate(principal,sid,run,review=True)
+    require(domain=='REPLAY','video_session_required')
+    from .video import summarize
+    with engine.store.tx(domain) as db:
+        current = engine.store.get(db,'session',sid)
+        if current['run'] != run: raise ApiError(409,'stale_run')
+        session = current['payload']['session']
+        def rows(kind):
+            result = engine.store.find(db,kind,sid=sid,run=run)
+            require(all(r['owner']==current['owner'] for r in result),'invalid_review_owner')
+            return result
+        events = [r['payload'] for r in rows('event')]
+        summary = summarize(session, events,[r['payload'] for r in rows('observation')],[r['payload'] for r in rows('frame')])
+        candidates = rows('candidate'); by_event = {r['payload'].get('eventId'):r for r in candidates}
+        require(len(by_event)==len(candidates)==len(events),'invalid_review_candidates')
+        counts = dict.fromkeys(('pending','approved','rejected'),0); locations = dict.fromkeys(('UNKNOWN','ESTIMATED','VERIFIED'),0); verified = []
+        for event in events:
+            counts[event['reviewStatus']] += 1
+            row = by_event.get(event['eventId']); require(row is not None,'invalid_review_candidate')
+            item = row['payload']; same_scope(item['candidate'],session); same_detector(item['candidate'],session)
+            if item.get('verifiedDamage'):
+                v = wire(VerifiedDamage.model_validate(item['verifiedDamage']))
+                same_scope(v,session); same_detector(v,session)
+                require(event['reviewStatus']=='approved' and v['candidateId']==row['id'],'invalid_review_verification')
+                locations['VERIFIED'] += 1; verified.append({'candidateId':row['id'],'verifiedId':v['verifiedId']})
+            else: locations[item['candidate']['damageLocation']['kind']] += 1
+        c = summary['coverage']; planned = math.ceil(session['videoDurationMs']/session['samplingIntervalMs'])
+        verified.sort(key=lambda r:r['verifiedId'])
+        result = ReviewSummary(**scope(session),**session['detector'],environment='TEST',resultOrigin=summary['resultLabel'],session=session,totalEvents=len(events),includedEvents=summary['totalEvents'],rawObservationCount=summary['rawObservationCount'],reviewCounts=counts,locationCounts=locations,classCounts=summary['classCounts'],slots={'planned':planned,'analyzed':c['analyzedFrames'],'skipped':c['skippedFrames'],'failed':c['failedFrames'],'unattempted':planned-c['analyzedFrames']-c['skippedFrames']-c['failedFrames']},coverage=c,firstDamageTimestampMs=summary['firstDamageTimestampMs'],lastDamageTimestampMs=summary['lastDamageTimestampMs'],verifiedCount=len(verified),verifiedRelations=verified[:100],verifiedTruncated=len(verified)>100)
+        return bounded_review(wire(result) | {'firstDamageTimestampMs':result.firstDamageTimestampMs,'lastDamageTimestampMs':result.lastDamageTimestampMs})

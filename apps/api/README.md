@@ -321,3 +321,51 @@ değişmiş kodla mevcut veri alanında otomatik yeniden başlatmayın. Gerçek 
 auth dosyasına reviewer eklemek ayrıca yetkilendirilmelidir. Üretim RBAC, audit
 saklama politikası, karar geri açma/düzeltme ve M4B/M4C arayüzleri tamamlanmamıştır.
 Örnekler ve politika: [M4 inceleme akışı](../../docs/architecture/m4-review-flow.md).
+
+## M4B: kanıt metadata ve reviewer özeti
+
+İki ek GET ucu mevcut reviewer/domain/TEST kontrollerine tabidir:
+
+- `/v1/review/sessions/{sessionId}/runs/{runId}/candidates/{candidateId}/evidence`
+- `/v1/review/sessions/{sessionId}/runs/{runId}/summary`
+
+İlk uç `{environment,candidateId,items,nextCursor,observationCount,frameCount}`
+döner. Her öğe candidate/event/scope/detector kimliği, orijinal ImageFrame,
+EvidenceRef ve yalnız seçilen adaya ait kayıtlı observation/normalize box taşır.
+Binary indirme referansı frameId'dir; görüntü mevcut yetkili binary uçtan alınır.
+Dosya yolu, medya adı, token veya görüntü byte'ı metadata içinde bulunmaz.
+
+`limit` varsayılan 25/maksimum 100 gözlemdir. Her sayfada ayrıca en fazla 20
+farklı frame vardır. Sıralama gerçek PTS/frameId/observationId; devam cursor'u
+principal/domain/ortam/aday/run/limit ile imzalıdır. Büyük gruplar devam sayfasıyla
+okunur; M4A'nın 100 observation/20 frame önizlemesi değiştirilmemiştir. Metadata
+ve yeni reviewer summary JSON yanıtlarının üst sınırı 2 MiB UTF-8 byte'tır (413).
+
+Reviewer summary tek transaction içinde oturum, frame, observation, event ve
+aday ilişkilerini okur. totalEvents tüm geçici olaylar; reviewCounts tüm
+pending/approved/rejected dağılımıdır. includedEvents, classCounts ve ilk/son
+zamanlar mevcut owner özeti gibi pending+approved olaylara aittir. Owner summary
+değişmez; reddedilenler içine eklenmez. locationCounts ayrı hasar konumu durumudur.
+verifiedRelations ilk 100 ilişkiyi taşır; verifiedCount/verifiedTruncated toplamı
+ve kesilmeyi açıklar. Bilinmeyen audit veya koordinat üretilmez.
+
+slots.planned=N, analyzed=A, skipped=S, failed=F, unattempted=N−A−S−F.
+Başarılı kapsam dışında kalan N−A'dır ve skipped/failed yuvaları da içerir.
+Coverage oynatma ilerlemesi değildir. Yeni sayım/metadata DTO'ları shared ile aynı
+sentetik fixture'larla test edilir; mevcut DTO/testler korunur. Yeni tablo veya
+migration yoktur.
+
+Karar sonrası kanonik kaydı taramadan okuyabilmek için mevcut reviewer candidates
+ucuna isteğe bağlı `candidateId` filtresi eklendi. Bu filtre session/run/domain
+yetkisini genişletmez; diğer filtreler ve cursor bağlamı korunur.
+
+Web İnceleme sayfası ayrı reviewer token'ıyla çalışır; analiz token'ı aktarılmaz.
+Hedefler yalnız 127.0.0.1:8001 ve 127.0.0.1:8002 allowlist'idir. Hedef değişimi ve
+çıkış eski token/veri/istek/blob URL'lerini temizler. Kanıt MIME, boyut, imza,
+scope/event/frame/PTS ve doğal görüntü boyutuyla doğrulanır. Onay/ret içerik
+kararıdır; terminal karar geri açılmaz. Timeout'ta sunucu sonucu yeniden okunur;
+tekrar gerekiyorsa aynı commandId/gövde/revision korunur.
+
+M4B test servisi 127.0.0.1:8002 üzerinde ayrı veri ve kimliklerle çalışır. Varsayılan
+8001 video analizi korunur; iki servis veri paylaşmaz. Yeni üretim kimlik sistemi,
+M4C harita katmanı, model veya mobil özellik eklenmemiştir.

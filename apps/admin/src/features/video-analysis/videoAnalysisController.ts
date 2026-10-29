@@ -3,6 +3,7 @@ import { createVideoApi } from './videoApi.ts'
 import type { VideoApi } from './videoApi.ts'
 import { abortError, acceptsPTS, captureSample, checkAbort, encodeFrame, validateMetadata, VIDEO_LIMITS } from './videoSampling.ts'
 import type { Capture, VideoInfo } from './videoSampling.ts'
+import { localApiTarget } from '../../api/localApiTarget.ts'
 
 export type FrozenFrame = { url: string; width: number; height: number; pts: number; frameId: string; observations: DetectionObservation[]; processingMs: number | null }
 export type AnalysisState = { phase: 'idle' | 'starting' | 'capturing' | 'processing' | 'completed' | 'partial' | 'cancelled' | 'failed';
@@ -28,6 +29,11 @@ export class VideoAnalysisController {
       createUrl: b => URL.createObjectURL(b), revokeUrl: u => URL.revokeObjectURL(u), now: () => performance.now(), ...deps }
   }
   getSnapshot = () => this.state
+  setTarget(value: string) {
+    const target = localApiTarget(value)
+    this.reset()
+    this.deps.api = token => createVideoApi(token, fetch, 12000, target)
+  }
   subscribe = (fn: () => void) => { this.listeners.add(fn); return () => { this.listeners.delete(fn) } }
   private update(patch: Partial<AnalysisState>) { this.state = { ...this.state, ...patch }; if (!this.disposed) this.listeners.forEach(fn => fn()) }
   clearFrozen() { if (this.state.frozen) this.deps.revokeUrl(this.state.frozen.url); this.update({ frozen: null }) }

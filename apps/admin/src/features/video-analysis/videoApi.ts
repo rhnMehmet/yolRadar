@@ -1,6 +1,7 @@
 import { isImageFrame, isVideoAnalysisSession, sameScope, sameDetector } from '@roadsense/shared'
 import type { DetectionObservation, ImageFrame, VideoAnalysisSession, VideoAnalysisSummary, VideoTimelineEvent } from '@roadsense/shared'
 import { abortError, checkAbort, VIDEO_LIMITS } from './videoSampling.ts'
+import { localApiTarget } from '../../api/localApiTarget.ts'
 
 export const API_ORIGIN = 'http://127.0.0.1:8001'
 export const TEST_LABEL = 'TEST_SYNTHETIC'
@@ -88,7 +89,8 @@ export function validateSummary(value: unknown, session: VideoAnalysisSession): 
   return value as unknown as VideoAnalysisSummary
 }
 
-export function createVideoApi(token: string, fetcher: typeof fetch = fetch, timeoutMs = 12000) {
+export function createVideoApi(token: string, fetcher: typeof fetch = fetch, timeoutMs = 12000, target: string = API_ORIGIN) {
+  const origin = localApiTarget(target)
   if (!/^[\x21-\x7e]{32,480}$/.test(token)) throw new Error('Geçerli sınırlı REPLAY token’ını parola alanına girin; sohbetten paylaşmayın.')
   async function request(path: string, method: string, body: unknown, signal?: AbortSignal): Promise<unknown> {
     if (!/^\/v1\/[A-Za-z0-9/._:-]+$/.test(path)) throw new Error('API hedefi geçersiz.')
@@ -107,7 +109,7 @@ export function createVideoApi(token: string, fetcher: typeof fetch = fetch, tim
       if (binary ? body.size > VIDEO_LIMITS.maxFrameBytes : payload !== undefined && new TextEncoder().encode(payload as string).length > 128 * 1024) throw new Error('İstek boyutu API sınırını aşıyor.')
       checkAbort(controller.signal)
       return await Promise.race([timed, aborted, (async () => {
-        const response = await fetcher(API_ORIGIN + path, { method, signal: controller.signal, body: payload as BodyInit | undefined,
+        const response = await fetcher(origin + path, { method, signal: controller.signal, body: payload as BodyInit | undefined,
           headers: { Authorization: `Bearer ${token}`, ...(payload === undefined ? {} : { 'Content-Type': binary ? body.type : 'application/json' }) },
           cache: 'no-store', redirect: 'error', credentials: 'omit', referrerPolicy: 'no-referrer' })
         if (!response.ok) throw new VideoApiError(response.status)
@@ -124,7 +126,7 @@ export function createVideoApi(token: string, fetcher: typeof fetch = fetch, tim
       if (signal?.aborted) throw abortError()
       if (error instanceof VideoApiError) throw error
       // Never surface request/response bodies, URLs containing credentials or parser details.
-      throw new Error(timedOut ? 'API yanıtı zaman aşımına uğradı.' : 'API bağlantısı/yanıtı başarısız. 127.0.0.1:8001 servisini ve tarayıcı bağlantısını kontrol edin.')
+      throw new Error(timedOut ? 'API yanıtı zaman aşımına uğradı.' : 'API bağlantısı/yanıtı başarısız. Seçili yerel servisi ve tarayıcı bağlantısını kontrol edin.')
     } finally { clearTimeout(timer); signal?.removeEventListener('abort', cancel); controller.signal.removeEventListener('abort', abortListener) }
   }
   const base = (s: VideoAnalysisSession) => `/v1/sessions/${s.sessionId}/runs/${s.runId}`

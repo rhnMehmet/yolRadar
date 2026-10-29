@@ -5,12 +5,22 @@ from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import Response
 from ..contracts import ApiError, CanonicalClass, Domain, Id
 from ..security import Principal, authenticate
-from ..review_queries import list_candidates, list_sessions, require_reviewer
+from ..review_queries import candidate_evidence, reviewer_summary, list_candidates, list_sessions, require_reviewer
 from ..sessions import frame_key
 
 router = APIRouter(prefix='/v1/review', tags=['private reviewer reads'])
 Limit = Annotated[int, Query(ge=1, le=100)]
 Cursor = Annotated[str | None, Query(max_length=768)]
+
+@router.get('/sessions/{sessionId}/runs/{runId}/candidates/{candidateId}/evidence')
+def candidate_frames(sessionId: Id, runId: Id, candidateId: Id, request: Request, principal: Principal = Depends(authenticate), limit: Limit = 25, cursor: Cursor = None, environment: Literal['TEST','PRODUCTION'] = 'TEST'):
+    engine = access(request,principal,('limit','cursor','environment'),environment)
+    return candidate_evidence(engine,principal,sessionId,runId,candidateId,limit,cursor)
+
+@router.get('/sessions/{sessionId}/runs/{runId}/summary')
+def session_summary(sessionId: Id, runId: Id, request: Request, principal: Principal = Depends(authenticate), environment: Literal['TEST','PRODUCTION'] = 'TEST'):
+    engine = access(request,principal,('environment',),environment)
+    return reviewer_summary(engine,principal,sessionId,runId)
 
 def access(request, principal, allowed, environment, domain=None):
     engine = request.app.state.engine
@@ -33,9 +43,9 @@ def sessions(request: Request, principal: Principal = Depends(authenticate), lim
 @router.get('/sessions/{sessionId}/runs/{runId}/candidates')
 def candidates(sessionId: Id, runId: Id, request: Request, principal: Principal = Depends(authenticate), limit: Limit = 25, cursor: Cursor = None,
     environment: Literal['TEST', 'PRODUCTION'] = 'TEST', status: Literal['pending','approved','rejected'] | None = None,
-    canonicalClass: CanonicalClass | None = None):
-    engine = access(request, principal, ('limit','cursor','environment','status','canonicalClass'), environment)
-    return list_candidates(engine, principal, sessionId, runId, {'status':status,'canonicalClass':canonicalClass}, limit, cursor)
+    canonicalClass: CanonicalClass | None = None, candidateId: Id | None = None):
+    engine = access(request, principal, ('limit','cursor','environment','status','canonicalClass','candidateId'), environment)
+    return list_candidates(engine, principal, sessionId, runId, {'status':status,'canonicalClass':canonicalClass,'candidateId':candidateId}, limit, cursor)
 
 @router.get('/sessions/{sessionId}/runs/{runId}/evidence/{frameId}')
 def evidence(sessionId: Id, runId: Id, frameId: Id, request: Request, principal: Principal = Depends(authenticate), environment: Literal['TEST','PRODUCTION'] = 'TEST'):

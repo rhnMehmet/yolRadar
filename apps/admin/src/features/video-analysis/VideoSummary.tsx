@@ -1,25 +1,21 @@
-import type { VideoAnalysisSummary } from '@roadsense/shared'
-import { classLabel, formatTime } from './videoSampling.ts'
-export function VideoSummary({ summary, onSeek }: { summary: VideoAnalysisSummary | null; onSeek: (seconds: number) => void }) {
-  if (!summary) return <section className="va-card"><h3>Analiz özeti</h3><p>Backend özeti analiz başladığında burada görünür. Videonun sona gelmesi analiz tamamlandı anlamına gelmez.</p></section>
-  const c = summary.coverage
-  return <section className="va-card" aria-labelledby="summary-title">
-    <div className="va-card-heading"><h3 id="summary-title">Backend analiz özeti</h3><span className="va-test">{summary.resultLabel}</span></div>
-    <p>Sunucu analiz durumu: <strong>{summary.analysisStatus}</strong> · Kapsam: <strong>{c.status}</strong></p>
-    <div className="va-metrics">
-      <div><strong>{c.analyzedFrames}</strong><span>Analiz edilen kare / başarılı yuva</span></div>
-      <div><strong>{c.skippedFrames} / {c.failedFrames}</strong><span>Backend atlanan / başarısız kare</span></div>
-      <div><strong>{summary.totalEvents}</strong><span>Geçici analiz olayları</span></div>
-      <div><strong>{summary.rawObservationCount}</strong><span>Ham gözlem</span></div>
-    </div>
-    <p>Fiziksel tracker yoktur; provisional event groups kesin fiziksel hasar sayısı değildir. Bir saniyelik plan kapsamı tüm video karelerini kapsamaz.</p>
-    <dl className="va-details"><dt>Kimlik</dt><dd>{summary.detectorKind} · {summary.modelVersion} · {summary.classMapVersion}</dd>
-      <dt>İlk / son olay</dt><dd>{summary.firstDamageTimestampMs === null ? 'Yok' : formatTime(summary.firstDamageTimestampMs)} / {summary.lastDamageTimestampMs === null ? 'Yok' : formatTime(summary.lastDamageTimestampMs)}</dd>
-      <dt>Sınıf dağılımı</dt><dd>{Object.entries(summary.classCounts).map(([label, count]) => `${classLabel(label)}: ${count}`).join(' · ')}</dd>
-      <dt>Başarılı kapsam</dt><dd>{c.coveredRanges.length ? c.coveredRanges.map(r => `[${formatTime(r.startMs)}–${formatTime(r.endMs)})`).join(' · ') : 'Yok'}</dd>
-      <dt>Analiz edilmemiş aralıklar</dt><dd>{c.unanalysedRanges.length ? c.unanalysedRanges.map(r => `[${formatTime(r.startMs)}–${formatTime(r.endMs)})`).join(' · ') : 'Yok'}</dd></dl>
-    <div className="table-scroll" role="region" aria-label="Geçici video olayları" tabIndex={0}><table><caption className="sr-only">TEST_SYNTHETIC geçici olay listesi</caption><thead><tr><th>Olay / zaman</th><th>Sınıf</th><th>Model skoru</th><th>İnceleme</th><th>Git</th></tr></thead>
-      <tbody>{summary.events.map(event => <tr key={event.eventId}><td className="va-wrap">{event.eventId}<br />{formatTime(event.videoTimestampMs)}</td><td>{classLabel(event.canonicalClass)}</td><td>{event.confidence.toFixed(2)}</td><td>{event.reviewStatus}</td><td><button type="button" aria-label={`${event.eventId} olayının video zamanına git`} onClick={() => onSeek(event.videoTimestampMs / 1000)}>Videoda aç</button></td></tr>)}</tbody></table></div>
-    {!summary.events.length && <p>Bu run için geçici olay yok.</p>}
+import { useState } from 'react'
+import type { VideoAnalysisSession,VideoAnalysisSummary } from '@roadsense/shared'
+import { classLabel,formatTime } from './videoSampling.ts'
+import { filterTimeline } from './timelinePresentation.ts'
+import { summaryMetrics } from './summaryPresentation.ts'
+export function VideoSummary({summary,session,onSeek}:{summary:VideoAnalysisSummary|null;session?:VideoAnalysisSession|null;onSeek:(seconds:number)=>void}){
+  const [kind,setKind]=useState(''),[page,setPage]=useState(0)
+  if(!summary)return <section className="va-card"><h3>Analiz özeti</h3><p>Backend özeti analiz başladığında burada görünür. Videonun sona gelmesi analiz tamamlandı anlamına gelmez.</p></section>
+  const c=summary.coverage,m=session?summaryMetrics(summary,session):null,events=filterTimeline(summary.events,kind,''),pages=Math.max(1,Math.ceil(events.length/20)),p=Math.min(page,pages-1)
+  return <section className="va-card" aria-labelledby="summary-title"><div className="va-card-heading"><div><span className="section-kicker">ÖRNEKLEME VE OLAY RAPORU</span><h3 id="summary-title">Backend analiz özeti</h3></div><span className="va-test">{summary.resultLabel}</span></div>
+    <p>Sunucu analiz durumu: <strong>{summary.analysisStatus}</strong> · Kapsam: <strong>{c.status}</strong>{session&&<> · Video süresi: {formatTime(session.videoDurationMs)}</>}</p>
+    <div className="va-metrics">{(m?[[m.planned,'Planlanan yuva'],[m.analyzed,'Başarılı analiz yuvası'],[m.skipped,'Skipped'],[m.failed,'Failed'],[m.unattempted,'Henüz sonuçlanmamış'],[m.outsideSuccess,'Başarılı kapsam dışında'],[summary.totalEvents,'Rapora dahil geçici olay'],[summary.rawObservationCount,'Ham observation']]:[[c.analyzedFrames,'Başarılı analiz yuvası'],[summary.totalEvents,'Rapora dahil geçici olay']]).map(([value,label])=><div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>
+    {m&&<><label className="va-progress">Başarılı örnekleme kapsamı: %{m.percent.toFixed(1)}<progress value={m.analyzed} max={m.planned}/></label><p>Başarı kapsamı dışındaki süre: {formatTime(m.unanalysedMs)}. Henüz sonuçlanmamış = N−A−S−F; başarılı kapsam dışında = N−A. Skipped/failed bu ikinci sayıya dahildir.</p></>}
+    <p>Bu ölçüler oynatma ilerlemesinden bağımsızdır. Fiziksel tracker yoktur; olaylar kesin tekil hasar sayısı değildir. Bir saniyelik plan tüm video karelerini kapsamaz.</p>
+    <dl className="va-details"><dt>Kaynak / model</dt><dd>{summary.sourceDomain} · {summary.detectorKind} · {summary.modelVersion}</dd><dt>classMap</dt><dd>{summary.classMapVersion}</dd><dt>İlk / son rapor olayı</dt><dd>{summary.firstDamageTimestampMs===null?'Yok':formatTime(summary.firstDamageTimestampMs)} / {summary.lastDamageTimestampMs===null?'Yok':formatTime(summary.lastDamageTimestampMs)}</dd><dt>Sınıf dağılımı</dt><dd>{Object.entries(summary.classCounts).map(([label,count])=>classLabel(label)+': '+count).join(' · ')}</dd><dt>İçerik durumu</dt><dd>Bu rapor pending ve approved olayları içerir. Reddedilenler ve tüm oturum sayımları ayrı İnceleme özetindedir.</dd><dt>Konum doğrulaması</dt><dd>Owner özetinde bulunmaz; yetkili İnceleme kaynağından okunur. İçerik onayı konum doğrulamaz.</dd></dl>
+    <details><summary>Kapsam aralıkları · {c.coveredRanges.length+c.unanalysedRanges.length} aralık</summary><p>Uzun aralık listelerinde ilk 20 gösterilir.</p><p>Başarılı: {c.coveredRanges.slice(0,20).map(r=>'['+formatTime(r.startMs)+'–'+formatTime(r.endMs)+')').join(' · ')||'Yok'}</p><p>Analiz edilmemiş: {c.unanalysedRanges.slice(0,20).map(r=>'['+formatTime(r.startMs)+'–'+formatTime(r.endMs)+')').join(' · ')||'Yok'}</p></details>
+    <div className="va-controls"><label>Rapor sınıfı<select value={kind} onChange={e=>{setKind(e.target.value);setPage(0)}}><option value="">Tüm sınıflar</option>{Object.keys(summary.classCounts).map(c=><option key={c} value={c}>{classLabel(c)}</option>)}</select></label><span>{events.length} görünür / {summary.totalEvents} rapor olayı</span></div>
+    <div className="table-scroll" role="region" aria-label="Geçici video olayları" tabIndex={0}><table><caption className="sr-only">TEST_SYNTHETIC geçici olay listesi</caption><thead><tr><th>Olay / zaman</th><th>Sınıf</th><th>Model skoru</th><th>İnceleme</th><th>Git</th></tr></thead><tbody>{events.slice(p*20,(p+1)*20).map(e=><tr key={e.eventId}><td className="va-wrap">{e.eventId}<br/>{formatTime(e.videoTimestampMs)}</td><td>{classLabel(e.canonicalClass)}</td><td>{e.confidence.toFixed(2)}</td><td>{e.reviewStatus}</td><td><button type="button" aria-label={e.eventId+' olayının video zamanına git'} onClick={()=>onSeek(e.videoTimestampMs/1000)}>Videoda aç</button></td></tr>)}</tbody></table></div>
+    {!events.length&&<p>Bu filtrede rapor olayı yok.</p>}<div className="va-controls"><button type="button" disabled={!p} onClick={()=>setPage(p-1)}>Önceki sayfa</button><span>{p+1}/{pages}</span><button type="button" disabled={p+1>=pages} onClick={()=>setPage(p+1)}>Sonraki sayfa</button></div>
   </section>
 }
