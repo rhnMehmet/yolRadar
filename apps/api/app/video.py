@@ -1,7 +1,7 @@
 """M1 video event and declared-sampling-grid summary policies."""
 import math
 from .contracts import (ApiError, CLASSES, FrameAnalysisOutcome, VideoAnalysisSession,
-    VideoTimelineEvent, require, same_detector, same_scope, scope, unique_ids, validate_time, wire)
+    VideoTimelineEvent, require, same_detector, same_scope, scope, unique_ids, validate_time, validate_video_sample, wire)
 
 
 def make_event(session, event_id, observation_ids, observations, review_status='pending'):
@@ -28,20 +28,25 @@ def make_event(session, event_id, observation_ids, observations, review_status='
 def coverage(session, outcomes):
     VideoAnalysisSession.model_validate(session)
     interval, duration = session['samplingIntervalMs'], session['videoDurationMs']
-    slots, ids = {}, set()
+    slots, ids, timestamps = {}, set(), set()
     for value in outcomes:
         item = wire(FrameAnalysisOutcome.model_validate(value))
         same_scope(item, session)
         timestamp = item['videoTimestampMs']
         require(item['videoId'] == session['videoId'] and timestamp < duration, 'invalid_outcome_time')
-        slot = math.floor(timestamp / interval + 0.5)
-        require(abs(slot * interval - timestamp) <= 0.000001, 'outcome_off_sampling_grid')
+        if session['contractVersion'] == 2:
+            slot = validate_video_sample(session, timestamp, item.get('plannedSampleTimestampMs'))
+        else:
+            require('plannedSampleTimestampMs' not in item, 'v1_has_no_planned_timestamp')
+            slot = math.floor(timestamp / interval + 0.5)
+            require(abs(slot * interval - timestamp) <= 0.000001, 'outcome_off_sampling_grid')
         if slot in slots:
             require(slots[slot] == item, 'conflicting_outcome')
             continue
-        require(item['frameId'] not in ids, 'reused_frame')
+        require(item['frameId'] not in ids and timestamp not in timestamps, 'reused_frame')
         slots[slot] = item
         ids.add(item['frameId'])
+        timestamps.add(timestamp)
     counts = {'analyzed': 0, 'skipped': 0, 'failed': 0}
     covered, gaps = [], []
     for index in range(math.ceil(duration / interval)):
@@ -69,7 +74,8 @@ def summarize(session, events, observations, frames):
         frame = item['frame']
         timestamp = frame['capturedAt']['valueMs']
         outcomes.append({**scope(session), 'videoId': session['videoId'], 'frameId': frame['frameId'],
-            'videoTimestampMs': timestamp, 'status': item['outcome']})
+            'videoTimestampMs': timestamp, 'status': item['outcome'],
+            **({'plannedSampleTimestampMs': frame['plannedSampleTimestampMs']} if 'plannedSampleTimestampMs' in frame else {})})
         if item['outcome'] == 'analyzed':
             analyzed[frame['frameId']] = timestamp
     result_coverage = coverage(session, outcomes)

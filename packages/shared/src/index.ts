@@ -9,7 +9,7 @@ export type {
   TokenProvider, ApiClientOptions, ApiClientConfig,
   ApiRequestOptions, ApiResult, ApiClient,
 } from './api.ts'
-export { CONTRACT_VERSION } from './contracts.ts'
+export { CONTRACT_VERSION, VIDEO_CONTRACT_VERSION, VIDEO_SAMPLE_TOLERANCE_MS } from './contracts.ts'
 export type {
   SourceDomain, DetectorKind, CanonicalClass, ResultLabel, SessionScope,
   DetectorIdentity, ClockDomain, CaptureTime, CaptureSession, ImageFrame,

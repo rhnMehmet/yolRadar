@@ -1,0 +1,31 @@
+{
+  "description": "Synthetic timestamps only. v2 forward window: 100 ms inclusive, next slot/video end exclusive.",
+  "cases": [
+    {"id":"exact", "samples":[[1000,1000,"a"]], "valid":true},
+    {"id":"one-ms-late", "samples":[[1000,1001,"a"]], "valid":true},
+    {"id":"upper-bound", "samples":[[1000,1100,"a"]], "valid":true},
+    {"id":"outside-window", "samples":[[1000,1100.001,"a"]], "valid":false},
+    {"id":"before-target", "samples":[[1000,999.999,"a"]], "valid":false},
+    {"id":"fractional-2997-fps", "samples":[[1000,1001.001001001001,"a"]], "valid":true},
+    {"id":"variable-intervals", "samples":[[0,12.5,"a"],[1000,1042.125,"b"],[2000,2001.75,"c"]], "valid":true},
+    {"id":"duplicate", "samples":[[1000,1001,"a"],[1000,1001,"a"]], "valid":true},
+    {"id":"conflicting-slot", "samples":[[1000,1001,"a"],[1000,1002,"b"]], "valid":false},
+    {"id":"conflicting-id-same-slot", "samples":[[1000,1001,"a"],[1000,1002,"a"]], "valid":false},
+    {"id":"same-id-different-slots", "samples":[[1000,1001,"a"],[2000,2001,"a"]], "valid":false},
+    {"id":"same-pts-different-slots", "interval":50, "samples":[[1000,1050,"a"],[1050,1050,"b"]], "valid":false},
+    {"id":"short-slot-exact-boundary", "interval":50, "samples":[[1000,1050,"a"]], "valid":false},
+    {"id":"short-slot-inside", "interval":50, "samples":[[1000,1049.999,"a"]], "valid":true},
+    {"id":"non-grid-target", "samples":[[1000.001,1001,"a"]], "valid":false},
+    {"id":"null-target", "samples":[[null,1001,"a"]], "valid":false},
+    {"id":"boolean-target", "samples":[[true,1001,"a"]], "valid":false},
+    {"id":"string-target", "samples":[["1000",1001,"a"]], "valid":false},
+    {"id":"end-exclusive", "duration":1050, "samples":[[1000,1050,"a"]], "valid":false},
+    {"id":"last-partial-slot", "duration":1050, "samples":[[1000,1049.5,"a"]], "valid":true},
+    {"id":"target-at-end", "duration":1000, "samples":[[1000,1000,"a"]], "valid":false},
+    {"id":"old-run", "runId":"old-run", "samples":[[1000,1001,"a"]], "valid":false},
+    {"id":"v1-exact-legacy", "version":1, "omitPlanned":true, "samples":[[1000,1000,"a"]], "valid":true},
+    {"id":"v1-no-hidden-upgrade", "version":1, "omitPlanned":true, "samples":[[1000,1001,"a"]], "valid":false},
+    {"id":"v1-forbids-target", "version":1, "samples":[[1000,1000,"a"]], "valid":false},
+    {"id":"v2-requires-target", "omitPlanned":true, "samples":[[1000,1000,"a"]], "valid":false}
+  ]
+}

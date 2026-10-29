@@ -7,6 +7,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, TypeAdapter, model_validator
 
 MAX_SAFE = 9_007_199_254_740_991
+VIDEO_SAMPLE_TOLERANCE_MS = 100
 Domain = Literal['REAL', 'SIM', 'REPLAY']
 DamageClass = Literal['pothole', 'longitudinal_crack', 'transverse_crack', 'alligator_crack', 'other']
 CanonicalClass = Literal['pothole', 'longitudinal_crack', 'transverse_crack', 'alligator_crack', 'other', 'unknown']
@@ -44,6 +45,7 @@ NonNegative = Annotated[Num, Field(ge=0)]
 Positive = Annotated[Num, Field(ge=2.220446049250313e-16)]
 Score = Annotated[Num, Field(ge=0, le=1)]
 SafeInt = Annotated[int, BeforeValidator(integer)]
+ContractVersion = Annotated[Literal[1, 2], BeforeValidator(integer)]
 
 
 class Wire(BaseModel):
@@ -56,10 +58,16 @@ class Exact(Wire):
 
 
 class Scope(Wire):
-    contractVersion: Annotated[Literal[1], BeforeValidator(integer)]
+    contractVersion: ContractVersion
     sessionId: Id
     runId: Id
     sourceDomain: Domain
+
+    @model_validator(mode='after')
+    def check_version(self):
+        if self.contractVersion == 2 and self.sourceDomain != 'REPLAY':
+            raise ValueError('v2_requires_replay')
+        return self
 
 
 class DetectorIdentity(Wire):
@@ -144,6 +152,7 @@ class PositionSample(Scope):
 
 class ImageFrame(Scope):
     frameId: Id
+    plannedSampleTimestampMs: Annotated[NonNegative | None, BeforeValidator(number)] = None
     capturedAt: Time
     width: Annotated[SafeInt, Field(ge=1, le=32768)]
     height: Annotated[SafeInt, Field(ge=1, le=32768)]
@@ -267,6 +276,7 @@ class FrameAnalysisOutcome(Scope):
     videoId: Id
     frameId: Id
     videoTimestampMs: NonNegative
+    plannedSampleTimestampMs: Annotated[NonNegative | None, BeforeValidator(number)] = None
     status: Literal['analyzed', 'skipped', 'failed']
 
 
@@ -326,7 +336,22 @@ def validate_frame(value, session):
     parsed = wire(ImageFrame.model_validate(value))
     same_scope(parsed, session)
     validate_time(parsed['capturedAt'], session)
+    if session['contractVersion'] == 2:
+        validate_video_sample(session, parsed['capturedAt']['valueMs'], parsed.get('plannedSampleTimestampMs'))
+    else:
+        require('plannedSampleTimestampMs' not in parsed, 'v1_has_no_planned_timestamp')
     return parsed
+
+
+def validate_video_sample(session, actual, planned):
+    VideoAnalysisSession.model_validate(session)
+    require(type(planned) in (int, float) and math.isfinite(planned) and 0 <= planned < session['videoDurationMs'], 'planned_sample_required')
+    interval = session['samplingIntervalMs']
+    slot = math.floor(planned / interval + 0.5)
+    require(slot * interval == planned, 'planned_sample_off_grid')
+    require(planned <= actual <= planned + VIDEO_SAMPLE_TOLERANCE_MS
+        and actual < min(planned + interval, session['videoDurationMs']), 'actual_sample_outside_tolerance')
+    return slot
 
 
 def validate_observation(value, session, frame, class_map):

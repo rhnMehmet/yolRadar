@@ -2,13 +2,16 @@ import type { DamageType } from './types.ts'
 
 /** Wire version, independent of model, dataset and application versions. */
 export const CONTRACT_VERSION = 1 as const
+/** Opt-in decoded-video timing; v1 retains its exact-grid meaning. */
+export const VIDEO_CONTRACT_VERSION = 2 as const
+export const VIDEO_SAMPLE_TOLERANCE_MS = 100 as const
 export type SourceDomain = 'REAL' | 'SIM' | 'REPLAY'
 export type DetectorKind = 'TEST' | 'YOLO'
 export type CanonicalClass = DamageType | 'unknown'
 export type ResultLabel = 'TEST_SYNTHETIC' | 'YOLO_RESULT'
 
 export interface SessionScope {
-  contractVersion: typeof CONTRACT_VERSION
+  contractVersion: typeof CONTRACT_VERSION | typeof VIDEO_CONTRACT_VERSION
   sessionId: string
   /** Rotate on seek, restart, video replacement or a new analysis attempt. */
   runId: string
@@ -43,6 +46,8 @@ export interface CaptureSession extends SessionScope {
 
 export interface ImageFrame extends SessionScope {
   frameId: string
+  /** Required in v2 REPLAY only. capturedAt.valueMs always remains actual PTS. */
+  plannedSampleTimestampMs?: number
   capturedAt: CaptureTime
   width: number
   height: number
@@ -172,6 +177,8 @@ export interface FrameAnalysisOutcome extends SessionScope {
   videoId: string
   frameId: string
   videoTimestampMs: number
+  /** v2 coverage slot; videoTimestampMs remains actual PTS. */
+  plannedSampleTimestampMs?: number
   status: 'analyzed' | 'skipped' | 'failed'
 }
 

@@ -4,7 +4,7 @@ import type {
 } from './contractValidation.ts'
 import {
   finite, identifier, isDetectionObservation, isImageFrame, isVideoAnalysisSession,
-  record, resultLabel, sameDetector, sameScope, stringIds,
+  record, resultLabel, sameDetector, sameScope, stringIds, validVideoSample,
 } from './contractValidation.ts'
 import type {
   AnalysisCoverage, CanonicalClass, ClassMap, CoverageRange, DetectionObservation,
@@ -111,23 +111,28 @@ function outcomesBySlot(session: VideoAnalysisSession, values: readonly FrameAna
   requireSession(session)
   const slots = new Map<number, FrameAnalysisOutcome>()
   const ids = new Set<string>()
+  const timestamps = new Set<number>()
   for (const outcome of values) {
     if (!record(outcome) || !sameScope(outcome, session) || outcome.videoId !== session.videoId
       || !identifier(outcome.frameId) || !finite(outcome.videoTimestampMs, 0, session.videoDurationMs)
       || outcome.videoTimestampMs === session.videoDurationMs
       || !['analyzed', 'skipped', 'failed'].includes(outcome.status)) throw new TypeError('Invalid frame outcome')
-    const slot = Math.round(outcome.videoTimestampMs / session.samplingIntervalMs)
-    if (Math.abs(slot * session.samplingIntervalMs - outcome.videoTimestampMs) > 0.000001) {
+    const planned = session.contractVersion === 2 ? outcome.plannedSampleTimestampMs : outcome.videoTimestampMs
+    if (session.contractVersion === 2 ? !validVideoSample(session, outcome.videoTimestampMs, planned)
+      : outcome.plannedSampleTimestampMs !== undefined || Math.abs(Math.round(outcome.videoTimestampMs / session.samplingIntervalMs) * session.samplingIntervalMs - outcome.videoTimestampMs) > 0.000001) {
       throw new TypeError('Frame outcome is outside the declared sampling grid')
     }
+    const slot = Math.round(planned! / session.samplingIntervalMs)
     const prior = slots.get(slot)
     if (prior) {
-      if (prior.frameId === outcome.frameId && prior.status === outcome.status) continue
+      if (prior.frameId === outcome.frameId && prior.status === outcome.status
+        && prior.videoTimestampMs === outcome.videoTimestampMs && prior.plannedSampleTimestampMs === outcome.plannedSampleTimestampMs) continue
       throw new TypeError('Conflicting slot outcome')
     }
-    if (ids.has(outcome.frameId)) throw new TypeError('Frame reused at a different video time')
+    if (ids.has(outcome.frameId) || timestamps.has(outcome.videoTimestampMs)) throw new TypeError('Frame reused at a different video time')
     slots.set(slot, outcome)
     ids.add(outcome.frameId)
+    timestamps.add(outcome.videoTimestampMs)
   }
   return slots
 }
@@ -175,7 +180,8 @@ export function summarizeVideoAnalysis(
   const analyzed = new Map([...slots.values()].filter(item => item.status === 'analyzed').map(item => [item.frameId, item]))
   for (const outcome of analyzed.values()) {
     const frame = evidence.frames.find(item => item.frameId === outcome.frameId)
-    if (!frame || frame.capturedAt.valueMs !== outcome.videoTimestampMs) throw new TypeError('Missing analyzed frame evidence')
+    if (!frame || frame.capturedAt.valueMs !== outcome.videoTimestampMs
+      || frame.plannedSampleTimestampMs !== outcome.plannedSampleTimestampMs) throw new TypeError('Missing analyzed frame evidence')
   }
   const coverage = calculateAnalysisCoverage(session, outcomes)
   if (session.analysisStatus === 'completed' && coverage.status !== 'complete') {

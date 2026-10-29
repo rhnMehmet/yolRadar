@@ -1,4 +1,5 @@
 import { DAMAGE_TYPES } from './types.ts'
+import { VIDEO_SAMPLE_TOLERANCE_MS } from './contracts.ts'
 import type {
   AlertEvent, CaptureSession, CaptureTime, ClassMap, DamageCandidate,
   DetectionObservation, DetectorIdentity, ImageFrame, PositionSample,
@@ -30,7 +31,7 @@ export function stringIds(value: unknown): value is string[] {
     && value.every(identifier) && new Set(value).size === value.length
 }
 export function isSessionScope(value: unknown): value is SessionScope {
-  return record(value) && value.contractVersion === 1 && identifier(value.sessionId)
+  return record(value) && (value.contractVersion === 1 || (value.contractVersion === 2 && value.sourceDomain === 'REPLAY')) && identifier(value.sessionId)
     && identifier(value.runId) && ['REAL', 'SIM', 'REPLAY'].includes(value.sourceDomain as string)
 }
 export function sameScope(value: unknown, expected: SessionScope): value is SessionScope {
@@ -76,8 +77,18 @@ export function isCaptureTime(value: unknown, session: CaptureSession): value is
 export function isImageFrame(value: unknown, session: CaptureSession): value is ImageFrame {
   return record(value) && isCaptureSession(session) && sameScope(value, session)
     && identifier(value.frameId) && isCaptureTime(value.capturedAt, session)
+    && (session.contractVersion === 2
+      ? isVideoAnalysisSession(session) && validVideoSample(session, value.capturedAt.valueMs, value.plannedSampleTimestampMs)
+      : value.plannedSampleTimestampMs === undefined)
     && Number.isSafeInteger(value.width) && finite(value.width, 1, 32_768)
     && Number.isSafeInteger(value.height) && finite(value.height, 1, 32_768)
+}
+/** v2 chooses a decoded frame at/after the target, within 100 ms and the same slot. */
+export function validVideoSample(session: VideoAnalysisSession, actual: number, planned: unknown): planned is number {
+  return finite(planned, 0, session.videoDurationMs) && planned < session.videoDurationMs
+    && Math.round(planned / session.samplingIntervalMs) * session.samplingIntervalMs === planned
+    && finite(actual, planned, Math.min(planned + VIDEO_SAMPLE_TOLERANCE_MS, session.videoDurationMs))
+    && actual < Math.min(planned + session.samplingIntervalMs, session.videoDurationMs)
 }
 export function isSpatialPosition(value: unknown, session: CaptureSession): value is SpatialPosition {
   if (!record(value) || !isCaptureSession(session)) return false

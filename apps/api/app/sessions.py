@@ -4,7 +4,7 @@ import hashlib
 import json
 from uuid import uuid4
 from pydantic import Field
-from .contracts import (ApiError, Domain, Exact, Id, ImageFrame, PositionSample, VideoAnalysisSession,
+from .contracts import (ApiError, ContractVersion, Domain, Exact, Id, ImageFrame, PositionSample, VideoAnalysisSession,
     parse_session, require, scope, validate_candidate, validate_frame, validate_observation,
     validate_position, validate_time, validate_verified, wire)
 from .detectors.test_detector import CLASS_MAP, IDENTITY, PROFILES
@@ -24,6 +24,7 @@ def frame_key(session, frame_id):
 
 
 class CreateSession(Exact):
+    contractVersion: ContractVersion = 1
     commandId: Id
     sourceDomain: Domain
     detectorKind: Literal['TEST', 'YOLO']
@@ -85,6 +86,9 @@ class Engine:
 
     def create(self, principal, request):
         data = wire(request)
+        # Keep the persisted M2 command fingerprint stable for omitted/explicit v1.
+        if data['contractVersion'] == 1:
+            data.pop('contractVersion')
         domain = data['sourceDomain']
         if domain not in principal.domains:
             raise ApiError(403, 'domain_not_allowed')
@@ -102,7 +106,7 @@ class Engine:
             if sum(row['payload']['session']['status'] == 'active' for row in current) >= 4:
                 raise ApiError(429, 'active_session_limit')
             sid, run_id = uuid4().hex, uuid4().hex
-            session = {'contractVersion': 1, 'sessionId': sid, 'runId': run_id, 'sourceDomain': domain,
+            session = {'contractVersion': data.get('contractVersion', 1), 'sessionId': sid, 'runId': run_id, 'sourceDomain': domain,
                 'status': 'active', 'clockDomain': {'REAL': 'DEVICE_MONOTONIC', 'SIM': 'SIMULATION', 'REPLAY': 'VIDEO'}[domain],
                 'clockId': data['clockId'], 'detector': IDENTITY.copy()}
             video_keys = ('videoId', 'videoDurationMs', 'samplingIntervalMs')
@@ -174,8 +178,11 @@ class Engine:
             if domain == 'REPLAY':
                 from .video import coverage
                 timestamp = frame['capturedAt']['valueMs']
-                coverage(session, [{**scope(session), 'videoId': session['videoId'], 'frameId': frame['frameId'], 'videoTimestampMs': timestamp, 'status': 'skipped'}])
-                if any(item['payload']['frame']['capturedAt']['valueMs'] == timestamp and item['payload']['frame']['frameId'] != frame['frameId'] for item in frames):
+                coverage(session, [{**scope(session), 'videoId': session['videoId'], 'frameId': frame['frameId'], 'videoTimestampMs': timestamp, 'status': 'skipped',
+                    **({'plannedSampleTimestampMs': frame['plannedSampleTimestampMs']} if 'plannedSampleTimestampMs' in frame else {})}])
+                if any((item['payload']['frame']['capturedAt']['valueMs'] == timestamp
+                    or (session['contractVersion'] == 2 and item['payload']['frame'].get('plannedSampleTimestampMs') == frame['plannedSampleTimestampMs']))
+                    and item['payload']['frame']['frameId'] != frame['frameId'] for item in frames):
                     raise ApiError(409, 'sampling_slot_conflict')
             key = frame_key(session, frame['frameId'])
             prior = self.store.get(db, 'frame', key)

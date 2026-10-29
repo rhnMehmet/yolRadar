@@ -16,29 +16,24 @@ yöntemiyle kullanılabilir. Embeddable paket değildir; venv desteği korunur.
 - Arşiv SHA-256: `cc28026a650970cc1570bb127312f1f9634eb67abfe157ae6ca1acbbc627d091`
 - Python.exe PSF Authenticode imzası ayrıca kontrol edilmelidir.
 
-Yerel düzen (`LOCALAPPDATA` altında, OneDrive dışında):
+M3A'da normal PowerShell'den doğrulanan düzen (OneDrive, AppData ve Codex
+LocalCache dışında; `%USERPROFILE%\RoadSenseLocal\m3a-cp31410`):
 
 ```text
-RoadSense/venvs/python-3.14.10/   tam, kayıtsız çalışma zamanı
-RoadSense/venvs/api-cp31410/      yalnız API sanal ortamı
-RoadSense/venvs/cache-cp31410/    hash doğrulamalı kurulum wheel'leri
-RoadSense/api-data/              özel kimlik dosyası ve çalışma verileri
+RoadSenseLocal/m3a-cp31410/python-3.14.10/   tam, kayıtsız çalışma zamanı
+RoadSenseLocal/m3a-cp31410/api-venv/         yalnız API sanal ortamı
+RoadSenseLocal/m3a-cp31410/private-test/access.json  yeni özel REPLAY kimliği
+RoadSenseLocal/m3a-cp31410/private-test/data/        ayrı TEST verileri
 ```
 
-Windows uygulama yalıtımı bu yolları uygulamanın LocalCache alanına yönlendirebilir.
-Sanal ortamın gerçek yolunu `python -c "import sys; print(sys.executable)"` ile
-doğrulayın; venv klasörünü taşımayın. PATH, py varsayılanı veya dosya ilişkilendirmesi
-değişikliği gerekmez. Mevcut Python 3.12/global pip bu ortama dahil değildir.
-
-Bu bilgisayardaki doğrulanmış sınırlama: Codex dışında, aynı Windows kullanıcısıyla
-çalışan normal PowerShell'de yukarıdaki mantıksal venv yolu bulunmuyor. LocalCache
-içindeki gerçek venv yürütülebiliri de pyvenv.cfg dosyasındaki mantıksal `home`
-yolunu normal bağlamda bulamadığı için başlatılamıyor. Aşağıdaki komutlar mevcut
-kurulumda Codex bağlamında çalışır; normal terminal için doğrudan çalıştıkları
-varsayılmamalıdır. Ortam dosyaları veya sistem ayarları bu kontrol sırasında
-değiştirilmedi. Normal terminalden bağımsız başlatma için ayrı onayla, doğru fiziksel
-runtime yolundan yeni bir venv oluşturulması ve yeniden doğrulanması gerekir.
-Bu sınırlama kaynak kodundan çok mevcut yerel kurulumla ilgilidir.
+Eski M2 LocalCache ortamı korunur. Eski venv'in `pyvenv.cfg` içindeki mantıksal
+AppData `home` yolu normal PowerShell'de bulunamadığından çıkış kodu 103 üretir.
+Yeni runtime doğrulanmış aynı ZIP'ten çıkarıldı, yeni venv fiziksel runtime
+yolundan oluşturuldu ve aynı wheel/hash kilitleriyle çevrimdışı kuruldu. Eski
+venv taşınmadı veya değiştirilmedi. Paket kimliği olmayan aynı kullanıcı
+PowerShell sürecinde Python/importlar, pip check, pytest ve HTTP servis başlangıcı
+ayrıca doğrulandı. PATH, py varsayılanı, registry, dosya ilişkileri ve global
+Python 3.12/pip değiştirilmedi. Bu doğrulama başka bilgisayara kurulum testi değildir.
 
 `requirements.lock` 15 çalışma zamanı paketini, `requirements-dev.lock` bunlara
 ek 9 test paketini sabitler. `requirements-bootstrap.lock` pip **26.2.2** içindir.
@@ -48,7 +43,8 @@ belgeler; bu kaynak uygulama için editable install/build backend gerekmez.
 Hazırlanmış sanal ortamda, bu klasörden PowerShell:
 
 ```powershell
-$apiPython = Join-Path $env:LOCALAPPDATA 'RoadSense\venvs\api-cp31410\Scripts\python.exe'
+$apiRoot = Join-Path $env:USERPROFILE 'RoadSenseLocal\m3a-cp31410'
+$apiPython = Join-Path $apiRoot 'api-venv\Scripts\python.exe'
 & $apiPython -m pip install --require-hashes --only-binary=:all: -r requirements-bootstrap.lock
 & $apiPython -m pip install --require-hashes --only-binary=:all: -r requirements-dev.lock
 & $apiPython -m pip check
@@ -67,9 +63,14 @@ Gerçek değerleri terminale/loga/repo örneklerine yazmayın. Sabit geliştirme
 bu depoda bulunmaz. Bu mekanizma üretim kullanıcı kimlik sağlayıcısı değildir.
 
 ```powershell
-$env:ROADSENSE_API_AUTH_FILE = Join-Path $env:LOCALAPPDATA 'RoadSense\api-data\dev-access.json'
-$env:ROADSENSE_API_DATA_DIR = Join-Path $env:LOCALAPPDATA 'RoadSense\api-data'
-& $apiPython -m uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 --workers 1 --limit-concurrency 16 --timeout-keep-alive 5 --no-access-log
+$apiRoot = Join-Path $env:USERPROFILE 'RoadSenseLocal\m3a-cp31410'
+$apiPython = Join-Path $apiRoot 'api-venv\Scripts\python.exe'
+Set-Location -LiteralPath (Join-Path $env:USERPROFILE 'OneDrive\Masaüstü\yolRadar\apps\api')
+$env:PYTHONDONTWRITEBYTECODE = '1'
+$env:ROADSENSE_API_AUTH_FILE = Join-Path $apiRoot 'private-test\access.json'
+$env:ROADSENSE_API_DATA_DIR = Join-Path $apiRoot 'private-test\data'
+& $apiPython -B -m pip check
+& $apiPython -B -m uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8001 --workers 1 --limit-concurrency 16 --timeout-keep-alive 5 --no-access-log
 ```
 
 Eksik/geçersiz kimlik yapılandırmasında başlangıç reddedilir. Health ve OpenAPI
@@ -82,8 +83,32 @@ Sunucuyu `0.0.0.0` üzerinde açmayın. M2 internet/LAN veya gerçek kullanıcı
 üretim dağıtımı için tasarlanmamıştır. `--reload`/çoklu Uvicorn worker kullanmayın;
 aynı veri alanına ikinci servis ayrıca işletim sistemi kilidiyle reddedilir.
 
-Health: `GET http://127.0.0.1:8000/health`.
-OpenAPI request şemaları: `GET http://127.0.0.1:8000/openapi.json`.
+Ön planda başlatılan servisi aynı terminalde **Ctrl+C** ile durdurun. M3A test
+servisi 8001'de zaten çalışıyorsa ikinci kez başlatmayın. Farklı bir terminalden
+yalnız bu servisi güvenle durdurmak için aşağıdaki kontrol kullanılabilir:
+
+```powershell
+$apiPython = Join-Path $env:USERPROFILE 'RoadSenseLocal\m3a-cp31410\api-venv\Scripts\python.exe'
+$apiBasePython = Join-Path $env:USERPROFILE 'RoadSenseLocal\m3a-cp31410\python-3.14.10\python.exe'
+$listener = @(Get-NetTCPConnection -State Listen -LocalPort 8001 -ErrorAction SilentlyContinue)
+if ($listener.Count -eq 1 -and $listener[0].LocalAddress -eq '127.0.0.1') {
+    $apiProcess = Get-CimInstance Win32_Process -Filter "ProcessId=$($listener[0].OwningProcess)"
+    if ($apiProcess.ExecutablePath -in @($apiPython, $apiBasePython) -and
+        $apiProcess.CommandLine.StartsWith(('"' + $apiPython + '" ')) -and
+        $apiProcess.CommandLine -match 'uvicorn app\.main:create_app' -and
+        $apiProcess.CommandLine -match '--port 8001(?:\s|$)') {
+        Stop-Process -Id $apiProcess.ProcessId
+    } else { throw '8001 beklenen RoadSense sürecine ait değil; durdurulmadı.' }
+}
+```
+
+8000 eski ortam ve verileriyle çalışır; yeni 8001 ayrı veri kökünü kullanır.
+Eski veriler/kimlikler kopyalanmadı. Yeni kimlik yalnız REPLAY yetkilidir,
+reviewer değildir. İki servise aynı SQLite veri kökünü vermeyin. Health kontrolü
+için ayrı PowerShell'de `Invoke-RestMethod http://127.0.0.1:8001/health` kullanın.
+
+Health: `GET http://127.0.0.1:8001/health`.
+OpenAPI request şemaları: `GET http://127.0.0.1:8001/openapi.json`.
 Harici CDN kullanan Swagger/ReDoc sayfası açılmaz.
 
 ## REST sözleşmesi
@@ -95,7 +120,7 @@ image/png kullanılır. Bütün yanıtlar no-store/nosniff taşır.
 | Metot / yol | İstek | Başarılı yanıt |
 | --- | --- | --- |
 | GET /health | Yok; kimliksiz | 200: status, profile=TEST, resultLabel, contractVersion |
-| POST /v1/sessions | commandId, sourceDomain, detectorKind, testProfile, clockId; REPLAY için videoId/videoDurationMs/samplingIntervalMs | 201: `{session, resultLabel}` |
+| POST /v1/sessions | commandId, sourceDomain, detectorKind, testProfile, clockId; REPLAY için videoId/videoDurationMs/samplingIntervalMs; opsiyonel contractVersion (varsayılan 1, video için açık 2) | 201: `{session, resultLabel}` |
 | GET S | Yok | 200: `{session, resultLabel}` |
 | POST S/runs | commandId, expectedRunId | 200: yeni run içeren `{session, resultLabel}` |
 | POST S/cancel | Yok | 200: cancelled session; tekrarı yeni kayıt oluşturmaz |
@@ -136,8 +161,10 @@ Worker çökmesi/timeout ayrı güvenli errorCode ile raporlanır.
 
 1. Rastgele commandId ile REPLAY/TEST ve `synthetic_one`, `synthetic_two` veya
    `synthetic_empty` profilli oturum oluştur. Model/classMap kimliğini sunucudan al.
-2. Her örnek için benzersiz frameId ile ImageFrame kaydet. capturedAt VIDEO,
-   clockId ve videoId oturumla eşleşir; valueMs kaynak video zamanıdır.
+2. Decoded zaman ayrımı için oturumu açık `contractVersion: 2` ile oluştur.
+   Her örnek için benzersiz frameId ile ImageFrame kaydet. capturedAt VIDEO,
+   clockId ve videoId oturumla eşleşir; valueMs gerçek kaynak PTS'dir.
+   v2 `frame.plannedSampleTimestampMs` grid hedefini ayrıca taşır; PTS yuvarlanmaz.
 3. Aynı frameId'nin content yoluna canvas/JPEG/PNG byte'larını gönder. Bir aktif
    istek ve sınırlı istemci kuyruğu kullan; 429'da sınırsız tekrar başlatma.
 4. jobId'yi sorgula. Başarılı sonuçtaki M1 `box` alanı normalize x/y/width/height
@@ -154,7 +181,7 @@ değerleri tekrarları ayırır. Oturum oluşturma tekrarında güncel aynı otu
 
 ## M1 uyumu ve olay sayılarının anlamı
 
-M1 kaynakları değiştirilmez. Sıkı sonlu sayılar, boolean reddi, JS güvenli sayı
+M1 v1 davranışı korunur; M3A v2 açıkça eklenmiştir. Sıkı sonlu sayılar, boolean reddi, JS güvenli sayı
 sınırı, saat/domain, kutu, classMap, aday/verified ayrımı Python'da kontrol edilir.
 İki dil aynı 89 sentetik fixture'ı okur. Testlerdeki YOLO kimliği gerçek model
 çalıştırıldığı anlamına gelmez. Gerçek koordinat, medya veya video içermezler.
@@ -176,8 +203,12 @@ totalEvents kesin tekil fiziksel hasar sayısı değildir; rawObservationCount a
 
 Özet rejected olayları dışlar; pending olaylar geçicidir. Kapsam tamamlanması
 yalnız sabit samplingIntervalMs gridindeki tüm örnekleri ifade eder, tüm video
-karelerini değil. Grid dışındaki kare kabul edilmez; decoded video zamanı ve hedef
-örnekleme zamanı M3'te eşleştirilmelidir. Kaynak zamanı HTTP yanıt saati değildir.
+karelerini değil. v1 tam-grid kuralı korunur. v2 gerçek PTS ile grid hedefini ayırır:
+hedef <= PTS <= hedef+100 ms, ayrıca PTS sonraki yuvadan/video bitiminden küçüktür.
+Hedef öncesi veya pencere dışı kare başarı sayılmaz. Olay zamanı gerçek PTS,
+kapsam planlanan hedef kullanır. Kaynak zamanı HTTP yanıt saati değildir.
+Sürümleme, tolerans ve geri alma ayrıntıları:
+[M3A zaman sözleşmesi](../../docs/architecture/m3a-video-timing.md).
 
 Konumsuz video olayı insan tarafından onaylanabilir; bu işlem VerifiedDamage
 oluşturmaz. Harita doğrulaması açık konum/yöntem/belirsizlik ister; araç GPS'i hasar
