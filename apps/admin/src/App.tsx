@@ -4,6 +4,7 @@ import { getDamageTypeLabel, getReportStatusLabel } from '@roadsense/shared'
 import { demoReports, damageTypes, formatReportDate, reportStatuses } from './data/reports'
 import type { Report, ReportStatus } from './data/reports'
 import { DamageMapBoundary } from './features/damage-map/DamageMapBoundary'
+import type { MapReviewReference } from './features/damage-map/mapDamageAdapter.ts'
 import './App.css'
 
 const DamageMap = lazy(() => import('./features/damage-map/DamageMap'))
@@ -73,6 +74,7 @@ function ReportsTable({ reports }: { reports: readonly Report[] }) {
 
 function App() {
   const [section, setSection] = useState<Section>('overview')
+  const [reviewReference,setReviewReference]=useState<MapReviewReference|null>(null)
   const [query, setQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<ReportStatus | 'Tümü'>('Tümü')
   const currentSection = navigation.find((item) => item.id === section)!
@@ -110,7 +112,7 @@ function App() {
         <div className="brand"><span className="brand-symbol"><i /><i /><i /></span><div><span className="brand-name">RoadSense<span>.</span></span><span className="brand-caption">YOL YÖNETİM SİSTEMİ</span></div></div>
         <div className="workspace-label">ÇALIŞMA ALANI</div>
         <nav aria-label="Yönetim paneli bölümleri">
-          {navigation.map((item) => <button key={item.id} type="button" className={`nav-item ${section === item.id ? 'active' : ''}`} aria-current={section === item.id ? 'page' : undefined} onClick={() => setSection(item.id)}><Icon name={item.icon} /><span>{item.label}</span>{section === item.id && <span className="active-dot" />}</button>)}
+          {navigation.map((item) => <button key={item.id} type="button" className={`nav-item ${section === item.id ? 'active' : ''}`} aria-current={section === item.id ? 'page' : undefined} onClick={() => {setReviewReference(null);setSection(item.id)}}><Icon name={item.icon} /><span>{item.label}</span>{section === item.id && <span className="active-dot" />}</button>)}
         </nav>
         <div className="sidebar-bottom"><div className="pilot-label"><Icon name="pin" /><div><strong>Isparta Merkez</strong><span>İlk pilot bölge</span></div></div><div className="sidebar-divider" /><p>DAHA İYİ YOLLAR,<br /><strong>DAHA GÜVENLİ YARINLAR.</strong></p><span className="sidebar-demo">RoadSense · Demo sürüm</span></div>
       </aside>
@@ -134,13 +136,13 @@ function App() {
           {section === 'map' && (
             <DamageMapBoundary>
               <Suspense fallback={<div className="panel map-fallback" role="status">Harita hazırlanıyor…</div>}>
-                <DamageMap />
+                <DamageMap onReview={reference=>{setReviewReference(reference);setSection('review')}} />
               </Suspense>
             </DamageMapBoundary>
           )}
 
           {section === 'video' && <Suspense fallback={<div className="panel map-fallback" role="status">Video analizi hazırlanıyor…</div>}><VideoAnalysisPage /></Suspense>}
-          {section === 'review' && <Suspense fallback={<div className="panel map-fallback" role="status">İnceleme hazırlanıyor…</div>}><ReviewPage /></Suspense>}
+          {section === 'review' && <Suspense fallback={<div className="panel map-fallback" role="status">İnceleme hazırlanıyor…</div>}><ReviewPage key={reviewReference?`${reviewReference.origin}|${reviewReference.sourceDomain}|${reviewReference.sessionId}|${reviewReference.runId}|${reviewReference.candidateId}|${reviewReference.verifiedId}`:'list'} reference={reviewReference} /></Suspense>}
 
           {section === 'statistics' && <div className="statistics-grid"><section className="panel" aria-labelledby="stats-title"><div className="panel-heading"><div><span className="section-kicker">ÖRNEK VERİLER</span><h2 id="stats-title">Hasar türüne göre dağılım</h2></div><span className="record-count">{demoReports.length} kayıt</span></div><div className="damage-bars">{damageTypes.map((type) => { const count = demoReports.filter((report) => report.damageType === type).length; return <div className="damage-bar-row" key={type}><div><span>{getDamageTypeLabel(type)}</span><strong>{count}<small> bildirim</small></strong></div><div className="bar-track" role="img" aria-label={`${getDamageTypeLabel(type)}: ${count} örnek bildirim`}><span style={{ width: `${(count / demoReports.length) * 100}%` }} /></div></div> })}<p className="chart-note">Tüm hesaplamalar aynı örnek bildirim listesini kullanır.</p></div></section>{distribution}</div>}
 

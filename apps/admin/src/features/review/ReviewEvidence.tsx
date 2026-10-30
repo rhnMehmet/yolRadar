@@ -13,6 +13,6 @@ export function ReviewEvidence({frame,url,onError}:{frame:ReviewFrame|null;url:s
       <img key={url} src={url} alt={`${classLabel(frame.canonicalClass)} için kayıtlı TEST kanıt karesi`} width={image.width} height={image.height} onError={onError} onLoad={e=>{if(!imageDimensionsMatch(frame,e.currentTarget.naturalWidth,e.currentTarget.naturalHeight))onError()}}/>
       {boxes.map((b,i)=><span key={b.id} className="rv-box" style={{left:b.left+'%',top:b.top+'%',width:b.width+'%',height:b.height+'%'}}><span>{classLabel(frame.observations[i].canonicalClass)} · {frame.observations[i].confidence.toFixed(2)}</span></span>)}
     </div>:<p>Kanıt görüntüsü bekleniyor veya kullanılamıyor.</p>}
-  </div><div className="rv-evidence-meta"><span>{image.width} × {image.height} · PTS {formatTime(image.capturedAt.valueMs)}</span><button type="button" disabled={!url} onClick={()=>{void container.current?.requestFullscreen?.().catch(()=>undefined)}}>Tam ekran</button></div>
+  </div><div className="rv-evidence-meta"><span>{image.width} × {image.height} · {image.capturedAt.clockDomain==='VIDEO'?'Video PTS':image.capturedAt.clockDomain==='DEVICE_MONOTONIC'?'Cihaz saati (DEVICE_MONOTONIC)':'Simülasyon saati'} {formatTime(image.capturedAt.valueMs)}</span><button type="button" disabled={!url} onClick={()=>{void container.current?.requestFullscreen?.().catch(()=>undefined)}}>Tam ekran</button></div>
   <p>Bu kutular yalnız kayıtlı kanıt karesine aittir. TEST_SYNTHETIC model skoru gerçek doğruluk veya hasar şiddeti değildir.</p></section>
 }

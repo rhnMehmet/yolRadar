@@ -1,11 +1,15 @@
 import { isReviewFrame, isReviewItem, isReviewSession, isReviewSummary, sameScope, sameDetector } from '@roadsense/shared'
-import type { ReviewFrame, ReviewItem, ReviewSession, ReviewSummary } from '@roadsense/shared'
+import type { ReviewFrame, ReviewItem, ReviewSession, ReviewSummary, SessionScope, DetectorIdentity } from '@roadsense/shared'
+import { validateMapReference } from '../damage-map/mapDamageAdapter.ts'
+import type { MapReviewReference } from '../damage-map/mapDamageAdapter.ts'
+import type { MapQuery } from '../damage-map/mapApi.ts'
 import { localApiTarget } from '../../api/localApiTarget.ts'
 import { abortError } from '../video-analysis/videoSampling.ts'
 export type Filters = { status: string; canonicalClass: string }
 export type Page<T> = { items:T[]; nextCursor:string|null }
 export type EvidencePage = Page<ReviewFrame> & { observationCount:number; frameCount:number }
 export type Vote = { commandId:string; expectedReviewRevision:number; decision:'approve'|'reject' }
+export type ReviewContext = {session:SessionScope & {detector:DetectorIdentity}}
 const obj=(v:unknown):v is Record<string,unknown>=>!!v && typeof v==='object' && !Array.isArray(v)
 const demand=(v:unknown):void=>{if(!v)throw new Error('İnceleme yanıtının kimlik veya sözleşme kontrolü başarısız.')}
 const id=(v:string)=>{if(!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(v))throw new Error('Geçersiz kayıt kimliği.');return v}
@@ -39,23 +43,36 @@ export function createReviewApi(token:string,target:string='http://127.0.0.1:800
     }catch(e){if(signal.aborted)throw abortError();if(e instanceof ReviewApiError)throw e;throw new Error('İnceleme bağlantısı veya yanıtı doğrulanamadı. Karar gönderildiyse sonucu ayrıca kontrol edin.')}
     finally{clearTimeout(timer);signal.removeEventListener('abort',abort);controller.signal.removeEventListener('abort',listener)}
   }
-  const base=(s:ReviewSession)=>`/v1/review/sessions/${id(s.session.sessionId)}/runs/${id(s.session.runId)}`
+  const base=(s:ReviewContext)=>`/v1/review/sessions/${id(s.session.sessionId)}/runs/${id(s.session.runId)}`
   const query=(values:Record<string,string|undefined|null>)=>{const q=new URLSearchParams();for(const [k,v] of Object.entries(values))if(v)q.set(k,v);return '?'+q.toString()}
   function page<T>(v:unknown,guard:(v:unknown)=>v is T):Page<T>{demand(obj(v)&&v.environment==='TEST'&&Array.isArray(v.items)&&v.items.length<=100&&(v.nextCursor===null||typeof v.nextCursor==='string'&&v.nextCursor.length<=768)&&v.items.every(guard));return v as unknown as Page<T>}
   return {
+    async mapPage(q:MapQuery,signal:AbortSignal){
+      demand(['production','test'].includes(q.layer)&&['','REAL','SIM','REPLAY'].includes(q.sourceDomain)&&Number.isInteger(q.limit)&&q.limit>=1&&q.limit<=100&&(q.cursor===null||typeof q.cursor==='string'&&q.cursor.length<=768))
+      const v=await request('/v1/review/map-damages'+query({environment:'TEST',layer:q.layer,sourceDomain:q.sourceDomain,limit:String(q.limit),cursor:q.cursor}),signal)
+      const p=page(v,isReviewItem);demand(obj(v)&&v.layer===q.layer&&p.items.length<=q.limit&&(!q.sourceDomain||p.items.every(i=>i.sourceDomain===q.sourceDomain)))
+      return p
+    },
+    async reference(reference:MapReviewReference,signal:AbortSignal):Promise<ReviewItem>{
+      const r=validateMapReference(reference);demand(r.origin===origin)
+      const p=page(await request(`/v1/review/sessions/${id(r.sessionId)}/runs/${id(r.runId)}/candidates`+query({candidateId:r.candidateId,limit:'25'}),signal),isReviewItem)
+      demand(p.items.length===1&&p.nextCursor===null)
+      const item=p.items[0];demand(item.sessionId===r.sessionId&&item.runId===r.runId&&item.sourceDomain===r.sourceDomain&&item.candidateId===r.candidateId&&item.verifiedDamage?.verifiedId===r.verifiedId)
+      return item
+    },
     async sessions(signal:AbortSignal,cursor?:string|null){return page(await request('/v1/review/sessions'+query({cursor,limit:'25',sourceDomain:'REPLAY'}),signal),isReviewSession)},
     async candidates(s:ReviewSession,filters:Filters,signal:AbortSignal,cursor?:string|null,candidateId?:string){
       const p=page(await request(base(s)+'/candidates'+query({cursor,limit:'25',status:filters.status,canonicalClass:filters.canonicalClass,candidateId:candidateId?id(candidateId):undefined}),signal),isReviewItem)
       demand(p.items.every(i=>sameScope(i,s.session)&&sameDetector(i,s.session.detector)));return p
     },
     async summary(s:ReviewSession,signal:AbortSignal):Promise<ReviewSummary>{const v=await request(base(s)+'/summary',signal);demand(isReviewSummary(v)&&sameScope(v,s.session)&&sameDetector(v,s.session.detector));return v as ReviewSummary},
-    async frames(s:ReviewSession,cid:string,signal:AbortSignal,cursor?:string|null):Promise<EvidencePage>{
+    async frames(s:ReviewContext,cid:string,signal:AbortSignal,cursor?:string|null):Promise<EvidencePage>{
       const v=await request(base(s)+'/candidates/'+id(cid)+'/evidence'+query({cursor,limit:'100'}),signal),p=page(v,isReviewFrame)
       const observationIds=p.items.flatMap(f=>f.observations.map(o=>o.observationId))
       demand(obj(v)&&v.candidateId===cid&&Number.isSafeInteger(v.observationCount)&&Number.isSafeInteger(v.frameCount)&&Number(v.observationCount)>=observationIds.length&&Number(v.frameCount)>=p.items.length&&Number(v.frameCount)>0&&Number(v.frameCount)<=Number(v.observationCount)&&p.items.length>0&&p.items.length<=20&&observationIds.length<=100&&new Set(observationIds).size===observationIds.length&&new Set(p.items.map(f=>f.frame.frameId)).size===p.items.length&&p.items.every(f=>sameScope(f,s.session)&&sameDetector(f,s.session.detector)&&f.candidateId===cid))
       return {...p,observationCount:Number((v as Record<string,unknown>).observationCount),frameCount:Number((v as Record<string,unknown>).frameCount)}
     },
-    async image(s:ReviewSession,f:ReviewFrame,signal:AbortSignal):Promise<Blob>{demand(sameScope(f,s.session)&&sameDetector(f,s.session.detector)&&f.evidence.available&&f.evidence.mime);return await request(base(s)+'/evidence/'+id(f.frame.frameId),signal,undefined,f.evidence.mime) as Blob},
+    async image(s:ReviewContext,f:ReviewFrame,signal:AbortSignal):Promise<Blob>{demand(sameScope(f,s.session)&&sameDetector(f,s.session.detector)&&f.evidence.available&&f.evidence.mime);return await request(base(s)+'/evidence/'+id(f.frame.frameId),signal,undefined,f.evidence.mime) as Blob},
     async vote(s:ReviewSession,item:ReviewItem,body:Vote,signal:AbortSignal){
       demand(sameScope(item,s.session)&&sameDetector(item,s.session.detector)&&item.eventId&&item.sourceDomain==='REPLAY')
       const v=await request(`/v1/sessions/${id(s.session.sessionId)}/runs/${id(s.session.runId)}/events/${id(item.eventId!)}/review`,signal,body)

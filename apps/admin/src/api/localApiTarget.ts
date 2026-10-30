@@ -1,6 +1,7 @@
 export const API_TARGETS = [
   { origin:'http://127.0.0.1:8001', label:'Mevcut analiz alanı · 8001' },
   { origin:'http://127.0.0.1:8002', label:'İnceleme TEST alanı · 8002' },
+  { origin:'http://127.0.0.1:8003', label:'Harita sentetik TEST alanı · 8003' },
 ] as const
 export type ApiTarget = typeof API_TARGETS[number]['origin']
 export function localApiTarget(value: string): ApiTarget {

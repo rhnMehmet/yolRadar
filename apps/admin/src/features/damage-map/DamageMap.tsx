@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { divIcon } from 'leaflet'
+import { divIcon, Popup as LeafletPopup } from 'leaflet'
 import type { LeafletEventHandlerFnMap } from 'leaflet'
 import { MapContainer, Marker, Popup, TileLayer, ZoomControl, useMap } from 'react-leaflet'
 import { getDamageTypeLabel, getReportStatusLabel } from '@roadsense/shared'
 import { demoMapMarkers, INITIAL_MAP_ZOOM, ISPARTA_CENTER } from './demoMapMarkers'
+import { MapDataPanel } from './MapDataPanel.tsx'
+import { VerifiedDamageLayer } from './VerifiedDamageLayer.tsx'
+import { useMapDamages } from './useMapDamages.ts'
+import type { MapReviewReference } from './mapDamageAdapter.ts'
 import 'leaflet/dist/leaflet.css'
 import './DamageMap.css'
 
@@ -25,7 +29,10 @@ function MapViewportSync() {
     let frame = 0
     const update = () => {
       cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => map.invalidateSize({ pan: false }))
+      frame = requestAnimationFrame(() => {
+        map.invalidateSize({ pan: false })
+        map.eachLayer(layer=>{if(layer instanceof LeafletPopup && layer.isOpen())layer.update()})
+      })
     }
     const observer = new ResizeObserver(update)
     observer.observe(map.getContainer())
@@ -51,7 +58,10 @@ function CenterControl() {
 
 type TileState = 'loading' | 'ready' | 'error'
 
-export default function DamageMap() {
+export default function DamageMap({onReview}:{onReview:(reference:MapReviewReference)=>void}) {
+  const {controller,state}=useMapDamages()
+  const [classFilter,setClassFilter]=useState('')
+  const verifiedItems=[...state.productionPage.items,...(state.test?state.testPage.items:[])].filter(i=>!classFilter||i.item.canonicalClass===classFilter)
   const [tileState, setTileState] = useState<TileState>('loading')
   const [generation, setGeneration] = useState(0)
   const counts = useRef({ loaded: 0, failed: 0 })
@@ -87,6 +97,7 @@ export default function DamageMap() {
 
       <p className="damage-map__demo-notice">Demo harita — işaretçiler gerçek yol hasarı bildirimlerini temsil etmez.</p>
 
+      <MapDataPanel controller={controller} classFilter={classFilter} onClassFilter={setClassFilter}/>
       <div className="damage-map__canvas-frame">
         <MapContainer
           className="damage-map__canvas"
@@ -103,7 +114,7 @@ export default function DamageMap() {
           <TileLayer key={generation} url={tileUrl} attribution={attribution} maxZoom={19} keepBuffer={0} eventHandlers={events} />
           <MapViewportSync />
           <CenterControl />
-          {demoMapMarkers.map((marker, index) => (
+          {state.demo && demoMapMarkers.map((marker, index) => (
             <Marker
               key={marker.id}
               position={[marker.coordinates.latitude, marker.coordinates.longitude]}
@@ -125,6 +136,7 @@ export default function DamageMap() {
               </Popup>
             </Marker>
           ))}
+          <VerifiedDamageLayer items={verifiedItems} onReview={onReview}/>
         </MapContainer>
         {tileState === 'loading' && <div className="damage-map__loading" role="status">Harita döşemeleri yükleniyor…</div>}
       </div>
@@ -136,7 +148,9 @@ export default function DamageMap() {
         </div>
       )}
 
-      <div className="damage-map__legend" aria-label="Demo işaretçi açıklamaları">
+      <div className="damage-map__legend" aria-label="Katman işaretçi açıklamaları">
+        <span><i className="damage-map__verified-pin">T</i>TEST Verified Damage · açıkça etkinleştirilir</span>
+        <span>ÜRETİM Verified Damage · TEST servisinde boş</span>
         {demoMapMarkers.map((marker, index) => (
           <span key={marker.id}><i className={`damage-map__legend-dot damage-map__legend-dot--${marker.status}`}>{index + 1}</i>{getDamageTypeLabel(marker.damageType)}</span>
         ))}

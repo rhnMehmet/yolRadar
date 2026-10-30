@@ -1,8 +1,11 @@
 import type { ReviewFrame, ReviewItem, ReviewSession, ReviewSummary } from '@roadsense/shared'
 import { createReviewApi, ReviewApiError } from './reviewApi.ts'
 import type { ReviewApi, Filters, Vote } from './reviewApi.ts'
+import { validateMapReference } from '../damage-map/mapDamageAdapter.ts'
+import type { MapReviewReference } from '../damage-map/mapDamageAdapter.ts'
+import type { ReviewContext } from './reviewApi.ts'
 import { localApiTarget } from '../../api/localApiTarget.ts'
-const initial=()=>({connected:false,loading:false,error:'',message:'',sessions:[] as ReviewSession[],sessionCursor:null as string|null,session:null as ReviewSession|null,
+const initial=()=>({reference:null as MapReviewReference|null,connected:false,loading:false,error:'',message:'',sessions:[] as ReviewSession[],sessionCursor:null as string|null,session:null as ReviewSession|null,
   items:[] as ReviewItem[],cursor:null as string|null,selected:null as ReviewItem|null,frames:[] as ReviewFrame[],frameCursor:null as string|null,
   frame:null as ReviewFrame|null,imageUrl:'',summary:null as ReviewSummary|null,filters:{status:'pending',canonicalClass:''} as Filters,pendingDecision:false})
 export type ReviewState=ReturnType<typeof initial>
@@ -22,14 +25,28 @@ export class ReviewController {
   dispose(){this.disconnect();this.listeners.clear()}
   setTarget(value:string){const target=localApiTarget(value);this.disconnect();this.target=target}
   async connect(token:string){this.disconnect();const task=this.begin();try{const api=this.factory(token,this.target);const page=await api.sessions(task.signal);if(!task.current())return;this.api=api;this.update({connected:true,sessions:page.items,sessionCursor:page.nextCursor})}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}
+  async connectReference(token:string,reference:MapReviewReference){
+    this.disconnect();const task=this.begin()
+    try{const r=validateMapReference(reference);if(r.origin!==this.target)throw new Error('Harita hedefi ile inceleme hedefi eşleşmiyor.')
+      const api=this.factory(token,this.target),item=await api.reference(r,task.signal);if(!task.current())return
+      this.api=api;this.update({connected:true,reference:r,selected:item,items:[item]})
+      await this.selectItem(item)
+    }catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}
+  }
+  private context():ReviewContext|null{
+    if(this.state.session)return this.state.session
+    const i=this.state.selected
+    if(!this.state.reference||!i)return null
+    return {session:{contractVersion:i.contractVersion,sessionId:i.sessionId,runId:i.runId,sourceDomain:i.sourceDomain,detector:{detectorKind:i.detectorKind,modelVersion:i.modelVersion,classMapVersion:i.classMapVersion}}}
+  }
   async sessionPage(cursor:string|null=null){if(!this.api)return;const api=this.api,task=this.begin();this.clearImage();this.update({session:null,selected:null,summary:null,items:[],frames:[]});try{const page=await api.sessions(task.signal,cursor);if(task.current())this.update({sessions:page.items,sessionCursor:page.nextCursor})}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}
   async selectSession(session:ReviewSession,cursor:string|null=null,filters=this.state.filters){if(!this.api)return;const api=this.api,task=this.begin();this.clearImage();this.update({session,selected:null,frames:[],items:[],summary:null,filters});try{const [page,summary]=await Promise.all([api.candidates(session,filters,task.signal,cursor),api.summary(session,task.signal)]);if(task.current())this.update({items:page.items,cursor:page.nextCursor,summary})}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}
   async filters(filters:Filters){if(this.state.session)await this.selectSession(this.state.session,null,filters);else this.update({filters})}
-  async selectItem(item:ReviewItem,cursor:string|null=null){if(!this.api||!this.state.session)return;const api=this.api,session=this.state.session,task=this.begin();this.clearImage();this.update({selected:item,frames:[]});try{const page=await api.frames(session,item.candidateId,task.signal,cursor);if(!task.current())return;if(page.items.some(f=>f.eventId!==item.eventId||f.canonicalClass!==item.canonicalClass))throw new Error('Kanıt olay kimliği veya sınıfı seçili kayıtla eşleşmiyor.');this.update({frames:page.items,frameCursor:page.nextCursor});if(page.items[0])await this.loadImage(api,session,page.items[0],task)}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}
-  private async loadImage(api:ReviewApi,s:ReviewSession,f:ReviewFrame,task:{signal:AbortSignal;current:()=>boolean}){this.clearImage();this.update({frame:f});if(!f.evidence.available)throw new Error('Bu kanıt görüntüsü şu anda kullanılamıyor.');const blob=await api.image(s,f,task.signal);if(!task.current())return;const url=this.createUrl(blob);this.update({imageUrl:url})}
-  async selectFrame(frame:ReviewFrame){if(!this.api||!this.state.session||frame.candidateId!==this.state.selected?.candidateId||frame.eventId!==this.state.selected.eventId)return;const api=this.api,s=this.state.session,task=this.begin();try{await this.loadImage(api,s,frame,task)}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}
+  async selectItem(item:ReviewItem,cursor:string|null=null){const session=this.context();if(!this.api||!session)return;const api=this.api,task=this.begin();this.clearImage();this.update({selected:item,frames:[]});try{const page=await api.frames(session,item.candidateId,task.signal,cursor);if(!task.current())return;if(page.items.some(f=>f.eventId!==item.eventId||f.canonicalClass!==item.canonicalClass))throw new Error('Kanıt olay kimliği veya sınıfı seçili kayıtla eşleşmiyor.');this.update({frames:page.items,frameCursor:page.nextCursor});if(page.items[0])await this.loadImage(api,session,page.items[0],task)}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}
+  private async loadImage(api:ReviewApi,s:ReviewContext,f:ReviewFrame,task:{signal:AbortSignal;current:()=>boolean}){this.clearImage();this.update({frame:f});if(!f.evidence.available)throw new Error('Bu kanıt görüntüsü şu anda kullanılamıyor.');const blob=await api.image(s,f,task.signal);if(!task.current())return;const url=this.createUrl(blob);this.update({imageUrl:url})}
+  async selectFrame(frame:ReviewFrame){if(!this.api||!this.context()||frame.candidateId!==this.state.selected?.candidateId||frame.eventId!==this.state.selected.eventId)return;const api=this.api,s=this.context()!,task=this.begin();try{await this.loadImage(api,s,frame,task)}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}
   imageFailed(url:string){if(url!==this.state.imageUrl)return;this.clearImage();this.update({error:'Kanıt görüntüsünün doğal boyutları veya içeriği doğrulanamadı.'})}
-  async vote(decision:'approve'|'reject'){if(!this.api||!this.state.session||!this.state.selected||this.state.selected.reviewStatus!=='pending'||this.state.loading||this.pending)return
+  async vote(decision:'approve'|'reject'){if(this.state.reference||!this.api||!this.state.session||!this.state.selected||this.state.selected.reviewStatus!=='pending'||this.state.loading||this.pending)return
     this.pending={session:this.state.session,item:this.state.selected,body:{commandId:crypto.randomUUID(),expectedReviewRevision:this.state.selected.reviewRevision,decision}};this.update({pendingDecision:true});await this.sendPending()}
   async retry(){if(this.pending&&!this.state.loading)await this.sendPending()}
   async refresh(){if(!this.api||!this.state.session)return;if(this.pending){await this.reconcileOnly();return}const selected=this.state.selected,s=this.state.session;await this.selectSession(s);if(selected&&this.api){const task=this.begin();try{const p=await this.api.candidates(s,{status:'',canonicalClass:''},task.signal,null,selected.candidateId);if(task.current()&&p.items[0])this.update({selected:p.items[0]})}catch(e){this.failed(e,task.current)}finally{if(task.current())this.update({loading:false})}}}

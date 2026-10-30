@@ -251,3 +251,68 @@ M4C uygulanmadı; üretim harita katmanı TEST-only ortamda boş kalır. M5A mob
 ve sonraki kamera/ses/entegrasyon adımları ayrı onay bekler. Tarayıcı, viewport,
 fullscreen ve gerçek cihaz sonuçları otomatik unit testiyle eş tutulmaz; teslim
 raporu bağımsız kontrolleri, kullanıcı beyanlarını ve eksik testleri ayrı listeler.
+
+## M4C — Web harita katmanları
+
+Harita mevcut üç Isparta DEMO noktasını korur; sekiz bakım bildirimi ve 3/2/3
+sayılarıyla ilişkilendirmez. DEMO varsayılan açık, ÜRETİM açık, TEST kapalıdır.
+Mevcut TEST-only API'de üretim katmanı daima boştur. REAL kaynak etiketi,
+YOLO_RESULT veya reviewer onayı TEST ortamını üretime dönüştürmez.
+
+### Okuma ve konum politikası
+
+Harita istemcisi yalnız `GET /v1/review/map-damages` yeteneğini dışarı açar;
+karar veya konum yazma yeteneği yoktur. Ortak ReviewItem guard'ı, aynı scope ve
+detector doğrulaması, `isReviewMapEligible` ve Leaflet Web Mercator sınırı
+(±85.0511287798) uygulanır. UNKNOWN, araç konumu, SIM_LOCAL, konumsuz REPLAY,
+bozuk koordinatlar ve projeksiyon dışı noktalar çizilmez. Sıfır geçerlidir.
+
+GPS accuracyM, hasar uncertaintyM ve konumlandırma yöntemi ayrı gösterilir.
+VERIFIED, konumun matematiksel kesinliği veya bakımın tamamlanması değildir.
+İkon HTML'i sabittir; sunucu alanları yalnız React metni olarak render edilir.
+Popup'lar dar ekranda genişliği sınırlar, iç kaydırma kullanır; harita resize
+sonrası açık popup konumunu tekrar hesaplar. OSM atfı ve döşeme hata/tekrar
+akışı korunur. API hatası döşeme hatası değildir ve DEMO'yu kapatmaz.
+
+API yalnız environment/layer/sourceDomain/limit/cursor alır. Sınıf filtresi
+sadece yüklenen sayfadadır; global sorgu veya toplam gibi sunulmaz. Varsayılan
+25, üst sınır 100; cursor geçmişi önceki/sonraki sayfayı sağlar. Cursor 422
+verirse ilk sayfa bir kez yeniden okunur. Scope/limit değişince geçmiş sıfırlanır.
+
+### Kimlik ve navigasyon
+
+Kimlik yalnız bileşen/controller belleğindedir. URL, localStorage, sessionStorage
+veya VITE değişkenine yazılmaz. Hedef değişimi, çıkış ve unmount kimliği,
+marker'ları, cursor'ları ve TEST tercihini siler. Geç HTTP yanıtları generation ve
+abort ile dışlanır; çıkıştan sonra geciken okuma yeni TEST isteği başlatamaz.
+401/403 reviewer kimliğini düşürür. Diğer API hataları anlaşılır gösterilir.
+
+`İncelemede Aç` yalnız origin/sourceDomain/sessionId/runId/candidateId/verifiedId
+aktarır. Token, GPS snapshot'ı ve blob aktarılmaz. Ayrı reviewer girişi gerekir;
+hedef referans origin'ine sabittir. Canonical aday aynı run/domain/verifiedId
+ile yeniden okunur. REAL için CaptureSession oluşturulmaz, REPLAY oturum
+listesi/summary çağrılmaz. Kanıt mevcut metadata endpointinden okunur. REAL
+kanıt saati DEVICE_MONOTONIC, REPLAY video saati VIDEO PTS olarak etiketlenir.
+Haritadan açılan detay salt okunurdur; otomatik karar yoktur. Yeni normal
+İnceleme görünümüne geçiş ayrı component key ile eski kimliği temizler.
+
+### Bağımsız pozitif TEST alanı
+
+8003 loopback alanı yalnız M4C sentetik test içindir; açık allowlist girdisidir.
+Veri ve rastgele principal dosyaları repo dışındadır. REAL-scope producer ve
+reviewer ayrıdır. REAL sözleşmesi v1 kullanır; v2 yalnız REPLAY içindir.
+Sentetik PNG resmi upload/job akışıyla işlenir; iki aday resmi location review
+sözleşmesiyle HUMAN_PLACEMENT, sentetik GPS, accuracy 5 m, uncertainty 12 m
+olarak doğrulanır. Hiçbir fiziksel konum ölçümü veya gerçek YOLO tespiti yoktur.
+Doğrudan SQLite yazımı veya politika gevşetmesi yapılmaz. 8001/8002 verileri,
+kimlikleri ve servisleri kullanılmaz veya yeniden başlatılmaz. CORS mevcut
+izinli 5173 origin'leriyle sınırlıdır; wildcard eklenmez.
+
+### M4C doğrulama sınırları
+
+Yeni web testleri konum/provenans, API sınırları, cursor, kimlik yaşam döngüsü,
+geç yanıt ve REAL referans detayını kapsar. Gerçek HTTP testinde iki ayrı TEST
+sayfası, boş production, producer 403, canonical kanıt ve exact CORS doğrulanır.
+Bunlar gerçek fiziksel yol hasarı testi değildir. Birim/HTTP testleri görsel
+ve fiziksel dokunmatik testinin yerine geçmez; oturum raporu bu ayrımı belirtir.
+Üretim API'si, performans yük testi ve mobil M5A/M5B bu kapsamın dışındadır.
